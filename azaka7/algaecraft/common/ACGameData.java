@@ -28,7 +28,8 @@ public class ACGameData {
 
 	public static int[] biomeIDSwampList;
 	public static int[] biomeIDOceanList;
-
+	
+	public static boolean generateGuayule;
 	//public static int waterLightDecrement;
 
 	public static int algaeModelID;
@@ -36,7 +37,7 @@ public class ACGameData {
 	public static int coralModelID;
 	public static int seaweedModelID;
 
-	public static int waterBlockModelID;
+	//public static int waterBlockModelID;
 
 	private static final Class<?>[][] paramTypes = new Class[][] {{EnumCreatureType.class, Class.class, int.class, Material.class, boolean.class, boolean.class}};
 	public static final EnumCreatureType ambientWater = EnumHelper.addEnum(paramTypes, EnumCreatureType.class, "ambientWaterFish", EntityWaterMob.class, 40, Material.water, true, false);
@@ -48,14 +49,17 @@ public class ACGameData {
 			for(int i = 0; i < oceans.length; i++){
 				oceanIDs[i] = oceans[i].biomeID;
 			}
-			BiomeGenBase[] swamps = BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN);
+			BiomeGenBase[] swamps = BiomeDictionary.getBiomesForType(BiomeDictionary.Type.SWAMP);
 			int[] swampIDs = new int[swamps.length];
 			for(int i = 0; i < swamps.length; i++){
 				swampIDs[i] = swamps[i].biomeID;
 			}
+			ACConfiguration.startSection("General");
+			generateGuayule = ACConfiguration.getBool("Do Generate Guayule", true, "Does Guayule generate in the world? Note: setting to false will make certain parts of AlgaeCraft inaccessable without another mod that adds rubber.");
+			ACConfiguration.endSection();
 			
 			ACConfiguration.startSection("Biome Definitions");
-			biomeIDSwampList = ACConfiguration.getIntArray("Swamp Biome IDs", new int[]{BiomeGenBase.swampland.biomeID});
+			biomeIDSwampList = ACConfiguration.getIntArray("Swamp Biome IDs", swampIDs);
 			biomeIDOceanList = ACConfiguration.getIntArray("Ocean Biome IDs", oceanIDs);//BiomeGenBase.ocean.biomeID,BiomeGenBase.deepOcean.biomeID});
 			
 			ACConfiguration.startSection("Model IDs");
@@ -69,8 +73,8 @@ public class ACGameData {
 			if(spongeModelID < 0){spongeModelID = RenderingRegistry.getNextAvailableRenderId();}
 			seaweedModelID = ACConfiguration.getInt("Seaweed Model ID", -1);
 			if(seaweedModelID < 0){seaweedModelID = RenderingRegistry.getNextAvailableRenderId();}
-			waterBlockModelID = ACConfiguration.getInt("Special Wet Blocks Model ID", -1);
-			if(waterBlockModelID < 0){waterBlockModelID = RenderingRegistry.getNextAvailableRenderId();}
+			//waterBlockModelID = ACConfiguration.getInt("Special Wet Blocks Model ID", -1);
+			//if(waterBlockModelID < 0){waterBlockModelID = RenderingRegistry.getNextAvailableRenderId();}
 			
 			
 			ACConfiguration.endSection();

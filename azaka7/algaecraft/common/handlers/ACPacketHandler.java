@@ -1,17 +1,22 @@
 package azaka7.algaecraft.common.handlers;
-import java.util.*;
-
-import azaka7.algaecraft.common.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
+import azaka7.algaecraft.common.AbstractPacket;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
@@ -78,7 +83,7 @@ public class ACPacketHandler extends MessageToMessageCodec<FMLProxyPacket, Abstr
     // In line decoding and handling of the packet
     @Override
     protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
-        System.out.println("recieved packet");
+        //System.out.println("recieved packet");
     	ByteBuf payload = msg.payload();
         byte discriminator = payload.readByte();
         Class<? extends AbstractPacket> clazz = this.packets.get(discriminator);

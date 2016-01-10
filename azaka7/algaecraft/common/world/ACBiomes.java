@@ -14,14 +14,14 @@ public class ACBiomes {
 	static final BiomeGenBase.Height height_Lake = new BiomeGenBase.Height(-0.4F, 0.02F);
 	
 	public static BiomeGenBase greatLake;
-	public static BiomeGenBase greatLakeFlowered;
+	//public static BiomeGenBase greatLakeFlowered;
 	
 	public ACBiomes(){
 	}
 	
 	public static void initBiomes(){
-		greatLake = new BiomeGenGreatLake(getOpenID("Great Lake ID (+128 = Flowered)", 100), true, false).setHeight(height_Lake).setColor(48).setBiomeName("Great Lake");
-		greatLakeFlowered = new BiomeGenGreatLake(greatLake.biomeID+128, true, true).setHeight(height_Lake).setColor(48).setBiomeName("Flowered Great Lake");
+		greatLake = new BiomeGenGreatLake(getOpenID("Great Lake ID", 100), true, false).setHeight(height_Lake).setColor(48).setBiomeName("Great Lake");
+		//greatLakeFlowered = new BiomeGenGreatLake(greatLake.biomeID+128, true, true).setHeight(height_Lake).setColor(48).setBiomeName("Flowered Great Lake");
 		
 		BiomeManager.addSpawnBiome(greatLake);
 		BiomeManager.addBiome(BiomeType.COOL, new BiomeManager.BiomeEntry(greatLake,10));
@@ -45,6 +45,15 @@ public class ACBiomes {
 		}
 		ACConfiguration.endSection();
 		return 127;
+	}
+	
+	public static boolean isBiomeIDInList(BiomeGenBase biome, int[] ints){
+		for(int i : ints){
+			if(biome.biomeID == i){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

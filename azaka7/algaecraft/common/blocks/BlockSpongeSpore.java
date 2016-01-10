@@ -260,7 +260,7 @@ public class BlockSpongeSpore extends BlockBush implements IGrowable{
 			world.setBlock(x, y, z, this, world.getBlockMetadata(x, y, z)+1, 2);
 		}
 		else if(meta%8 == 2){
-			System.out.println(parent);
+			//System.out.println(parent);
 			world.setBlock(x, y, z, parent, 1, 2);
 		}
    		if(world.getBlock(x+1, y, z) == Blocks.air){

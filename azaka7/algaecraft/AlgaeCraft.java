@@ -2,6 +2,7 @@ package azaka7.algaecraft;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.config.Configuration;
+import azaka7.algaecraft.client.ACClientEventHandler;
 import azaka7.algaecraft.client.ClientProxy;
 import azaka7.algaecraft.common.ACConfiguration;
 import azaka7.algaecraft.common.ACGameData;
@@ -18,6 +19,7 @@ import azaka7.algaecraft.common.handlers.ACTickHandler;
 import azaka7.algaecraft.common.handlers.ACWorldGenHandler;
 import azaka7.algaecraft.common.items.ACItems;
 import azaka7.algaecraft.common.world.ACBiomes;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -73,10 +75,13 @@ public class AlgaeCraft {
 		ACEntities.registerEntities();
 		
 		proxy = event.getSide()==Side.CLIENT ? new ClientProxy() : new CommonProxy();
-		
-		ACKeyBindingHandler.INSTANCE.initialize();
+		if(event.getSide()==Side.CLIENT){
+			ACKeyBindingHandler.INSTANCE.initialize(event);
+			FMLCommonHandler.instance().bus().register(ACKeyBindingHandler.INSTANCE);
+			ACClientEventHandler.INSTANCE.initialize();
+		}
 		ACTickHandler.INSTANCE.initialize();
-		proxy.registerEventHandler();
+		proxy.registerCommon();
 		proxy.registerRenders();
 		
 		config.save();

@@ -3,6 +3,7 @@ package azaka7.algaecraft.client;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import azaka7.algaecraft.AlgaeCraft;
 import azaka7.algaecraft.client.model.ModelFish;
 import azaka7.algaecraft.client.model.ModelLobster;
@@ -29,11 +30,10 @@ public class ClientProxy extends CommonProxy{
 		if(AlgaeCraft.thermalExpansion()){
 			ClientRegistry.registerTileEntity(ACInterModHandler.getRFAirComporessor().getClass(), "airCompressorRender_RF", (TileEntitySpecialRenderer) new TileEntityRendererAirCompressor());
 		}
-		
 		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.algaeModelID,false,"algae"));
 		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.coralModelID,false,"coral"));
 		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.spongeModelID,false,"sponge"));
 		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.seaweedModelID, false,"seaweed"));
-		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.waterBlockModelID, false,"water"));
+		//RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.waterBlockModelID, false,"water"));
 	}
 }

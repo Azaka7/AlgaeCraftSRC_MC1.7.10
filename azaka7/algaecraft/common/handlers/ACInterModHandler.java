@@ -1,5 +1,6 @@
 package azaka7.algaecraft.common.handlers;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import azaka7.algaecraft.AlgaeCraft;
@@ -7,6 +8,8 @@ import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.rf.ACThermalExpansionHandler;
 import azaka7.algaecraft.common.thaumic.ACThaumicHandler;
 import azaka7.algaecraft.common.tileentity.TileEntityAirCompressor;
+import azaka7.algaecraft.common.tileentity.TileEntityAirCompressor_RF;
+import azaka7.algaecraft.common.tileentity.TileEntityWaterFilter;
 
 public class ACInterModHandler {
 	public static TileEntity getRFAirComporessor(){
@@ -41,5 +44,12 @@ public class ACInterModHandler {
 		else{
 			return ACThaumicHandler.getItem_Thaum(item0);
 		}
+	}
+
+	public static void registerRFTileEntities() {
+		if(AlgaeCraft.thermalExpansion() && ACGameData.enableRFDevices){
+			GameRegistry.registerTileEntity(TileEntityAirCompressor_RF.class, "AirCompressorRF_AC");
+		}
+		
 	}
 }

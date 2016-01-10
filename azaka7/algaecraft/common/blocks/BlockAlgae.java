@@ -6,6 +6,7 @@ import azaka7.algaecraft.AlgaeCraft;
 import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.CommonProxy;
 import azaka7.algaecraft.common.tileentity.TileEntityWaterFilter;
+import azaka7.algaecraft.common.world.ACBiomes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -66,9 +67,9 @@ public class BlockAlgae extends BlockBush {
 			}
 		}
 		if(!isSwamp){
-			BiomeGenBase[] swamps = BiomeDictionary.getBiomesForType(BiomeDictionary.Type.SWAMP);
-			for(int n=0;n<swamps.length;n++){
-				if(swamps[n].biomeID==world.getBiomeGenForCoords(x, z).biomeID || BiomeGenBase.swampland.biomeID==world.getBiomeGenForCoords(x, z).biomeID){
+			//BiomeGenBase[] swamps = BiomeDictionary.getBiomesForType(BiomeDictionary.Type.SWAMP);
+			for(int n=0;n<ACGameData.biomeIDSwampList.length;n++){
+				if(ACBiomes.isBiomeIDInList(world.getBiomeGenForCoords(x, z),ACGameData.biomeIDSwampList) || BiomeGenBase.swampland.biomeID==world.getBiomeGenForCoords(x, z).biomeID){
 					isSwamp=true;
 					break;
 				}

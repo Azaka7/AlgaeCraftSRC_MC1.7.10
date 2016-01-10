@@ -29,6 +29,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -58,7 +59,7 @@ public class ACCraftingHandler implements IFuelHandler {
 		//GameRegistry.registerFuelHandler(handler);
 		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.sticky_piston), new Object[]{Blocks.piston, ACBlocks.blockAlgae});
 		
-		//GameRegistry.addRecipe(new CoralRecipes());
+		GameRegistry.addRecipe(new CoralRecipes());
 		for(int i = 0; i < 4; i++){
 			GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.blockCoral, 2, i+4), new Object[]{new ItemStack(ACBlocks.blockCoral, 1, i)});
 			GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.blockCoral, 2, i+8+4), new Object[]{new ItemStack(ACBlocks.blockCoral, 1, i+8)});
@@ -76,10 +77,11 @@ public class ACCraftingHandler implements IFuelHandler {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACBlocks.blockLimestone), "cc", "cc", 'c', "blockCoral"));
 
 		//GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSponge, 2), new Object[]{new ItemStack(Blocks.sponge, 1, OreDictionary.WILDCARD_VALUE)});
-		//OreDictionary.registerOre("blockSponge", ACBlocks.blockSpongeYellow);
+		OreDictionary.registerOre("blockSponge", ACBlocks.blockSpongeYellow);
 		Block spongeAC = (Block)Block.blockRegistry.getObject("minecraft:sponge");
 		OreDictionary.registerOre("blockSponge", spongeAC);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ACItems.itemSponge, 2), new Object[]{"blockSponge"}));
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSponge, 2), new Object[]{Blocks.sponge});
 		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSpongeRed, 2), new Object[]{ACBlocks.blockSpongeRed});
 		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.blockSpongeSpore, 2), new Object[]{ACItems.itemSponge});
 		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.blockSpongeRedSpore, 2), new Object[]{ACItems.itemSpongeRed});
@@ -152,6 +154,30 @@ public class ACCraftingHandler implements IFuelHandler {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.itemKnifeGold),
 					"bk","s ",'b',bind,'k',"ingotGold",'s',"stickWood"));
 		}
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemKnifeIron), new Object[]{
+			"bi","s ",
+			Character.valueOf('b'), new ItemStack(ACBlocks.blockSeaweed),
+			Character.valueOf('i'), new ItemStack(Items.iron_ingot),
+			Character.valueOf('s'), new ItemStack(Items.stick)
+		});
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemKnifeGold), new Object[]{
+			"bi","s ",
+			Character.valueOf('b'), new ItemStack(ACBlocks.blockSeaweed),
+			Character.valueOf('i'), new ItemStack(Items.gold_ingot),
+			Character.valueOf('s'), new ItemStack(Items.stick)
+		});
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemKnifeIron), new Object[]{
+			"bi","s ",
+			Character.valueOf('b'), new ItemStack(Items.string),
+			Character.valueOf('i'), new ItemStack(Items.iron_ingot),
+			Character.valueOf('s'), new ItemStack(Items.stick)
+		});
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemKnifeGold), new Object[]{
+			"bi","s ",
+			Character.valueOf('b'), new ItemStack(Items.string),
+			Character.valueOf('i'), new ItemStack(Items.gold_ingot),
+			Character.valueOf('s'), new ItemStack(Items.stick)
+		});
 		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSquidFried), new Object[]{
 			new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemSquidCooked),
 			new ItemStack(Items.bowl), new ItemStack(Blocks.brown_mushroom)});
@@ -167,7 +193,20 @@ public class ACCraftingHandler implements IFuelHandler {
 		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemLobsterCooked, 4), new Object[]{
 			new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE), ACItems.itemLobsterBoiled});
 		GameRegistry.addRecipe(new ShapedOreRecipe(ACBlocks.blockLobsterCage, "wbw", "b b", "wbw", 'w', "plankWood", 'b', Blocks.iron_bars));
+		GameRegistry.addShapedRecipe(new ItemStack(ACBlocks.blockLobsterCage), new Object[]{
+			"wbw", "b b", "wbw",
+			Character.valueOf('w'), new ItemStack(Blocks.planks),
+			Character.valueOf('b'), new ItemStack(Blocks.iron_bars)
+		});
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemKnifeGold), new Object[]{
+			"wbw", "b b", "wbw",
+			Character.valueOf('w'), new ItemStack(ACBlocks.blockWoodTreated),
+			Character.valueOf('b'), new ItemStack(Blocks.iron_bars)
+		});
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ACBlocks.blockWoodTreated, 12), "plankWood", "plankWood", "plankWood", "plankWood", "plankWood", "plankWood", "dye", Items.clay_ball));
+		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.blockWoodTreated), new Object[]{
+			Blocks.planks,Blocks.planks,Blocks.planks,Blocks.planks,Blocks.planks,Blocks.planks,new ItemStack(Items.dye, 1, OreDictionary.WILDCARD_VALUE), Items.clay_ball
+		});
 		GameRegistry.addShapedRecipe(new ItemStack(ACBlocks.blockTWoodSlab, 6), "www", 'w', ACBlocks.blockWoodTreated);
 		GameRegistry.addShapedRecipe(new ItemStack(ACBlocks.blockGlassSealed, 6), "wgw","grg","wgw",'w',ACBlocks.blockWoodTreated,'g',Blocks.glass,'r',ACItems.itemRubberBall);
 		
@@ -187,7 +226,12 @@ public class ACCraftingHandler implements IFuelHandler {
 			ItemStack stack = ItemWetsuit.colorize(new ItemStack(ACItems.itemWetsuit), i);
 			GameRegistry.addRecipe(new ShapelessOreRecipe(
 					stack, new ItemStack(ACItems.itemWetsuit, 1, OreDictionary.WILDCARD_VALUE), "dye"+dyes[i]
-			));}
+			));
+			GameRegistry.addShapelessRecipe(stack, new Object[]{
+				new ItemStack(ACItems.itemWetsuit, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.dye, 1, i)
+			});
+		}
+		this.registerCustomWetsuits();
 		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemFlippers), new Object[]{
 			"n n","r r",nr[0],nr[1],nr[2],nr[3]});
 		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemRedironElectrolyzer), new Object[]{
@@ -215,44 +259,69 @@ public class ACCraftingHandler implements IFuelHandler {
 		}
 		OreDictionary.registerOre("materialRubber", ACItems.itemRubberBall.copy());
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemNeopreneTextile.copy(), "blockWool", "materialRubber"));
+		GameRegistry.addShapelessRecipe(ACItems.itemNeopreneTextile.copy(), new Object[]{
+			new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), ACItems.itemRubberBall.copy()
+		});
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.itemAirTankSmall),
 				" r ","i i"," i ",'i',"ingotIron",'r',"materialRubber"));
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemAirTankSmall), new Object[]{
+			" r ","i i"," i ",'i',Items.iron_ingot,'r',ACItems.itemRubberBall});
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.itemAirTankLarge),
 				" r ","ptp"," p ",'t',new ItemStack(ACItems.itemAirTankSmall, 1, OreDictionary.WILDCARD_VALUE),'r',"materialRubber", 'p', Blocks.heavy_weighted_pressure_plate));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACBlocks.blockAirCompressor),
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.itemAirTankLarge),
+				new Object[]{" r ","ptp"," p ",
+			't',new ItemStack(ACItems.itemAirTankSmall, 1, OreDictionary.WILDCARD_VALUE),
+			'r', ACItems.itemRubberBall.copy(), 
+			'p', Blocks.heavy_weighted_pressure_plate});
+		GameRegistry.addShapedRecipe(new ItemStack(ACBlocks.blockAirCompressor), new Object[]{
 				"chc","ptp","iri",
 				't',new ItemStack(ACItems.itemAirTankSmall, 1, OreDictionary.WILDCARD_VALUE),
 				'r',Items.repeater,
 				'i',Blocks.heavy_weighted_pressure_plate,
 				'c',ACItems.itemChipRediron,
 				'h', Blocks.hopper,
-				'p',Blocks.piston));
+				'p',Blocks.piston});
 		OreDictionary.registerOre("foodFishRaw",new ItemStack(Items.fish, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("foodFishRaw",new ItemStack(ACItems.itemLobsterRaw));
 		OreDictionary.registerOre("foodFishRaw",new ItemStack(ACItems.itemSquidRaw));
 		OreDictionary.registerOre("foodFishCooked",new ItemStack(Items.cooked_fished,1,OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("foodFishCooked",new ItemStack(ACItems.itemLobsterCooked));
 		OreDictionary.registerOre("foodFishCooked",new ItemStack(ACItems.itemSquidCooked));
+		
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiRaw, ACBlocks.blockSeaweed,"foodFishRaw", new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE)));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiRaw, ACBlocks.blockSeaweed,"foodFishRaw", new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE)));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiCooked, ACBlocks.blockSeaweed,"foodFishCooked", new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE)));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiCooked, ACBlocks.blockSeaweed,"foodFishCooked", new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE)));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentWood), "mbm"," sb","s m",
-				'm', Blocks.planks, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentBone), "mbm"," sb","s m",
-				'm', Items.bone, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentDiamond), "mbm"," sb","s m",
-				'm', Items.diamond, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentEmerald), "mbm"," sb","s m",
-				'm', Items.emerald, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentGold), "mbm"," sb","s m",
-				'm', Items.gold_ingot, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentIron), "mbm"," sb","s m",
-				'm', Items.iron_ingot, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentNetherbrick), "mbm"," sb","s m",
-				'm', Items.netherbrick, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ACItems.tridentStone), "mbm"," sb","s m",
-				'm', Blocks.cobblestone, 's', Items.stick, 'b', ACBlocks.blockSeaweed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiRawPumpkin, ACBlocks.blockSeaweed,"foodFishRaw", Blocks.pumpkin, new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiRawPumpkin, ACBlocks.blockSeaweed,"foodFishRaw", Blocks.pumpkin, new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiCookedPumpkin, ACBlocks.blockSeaweed,"foodFishCooked", Blocks.pumpkin, new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ACItems.itemSushiCookedPumpkin, ACBlocks.blockSeaweed,"foodFishCooked", Blocks.pumpkin, new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE)));
+
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiRaw), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.fish, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiRaw), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.fish, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiCooked), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.cooked_fished, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiCooked), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.cooked_fished, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE)});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiRawPumpkin), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.fish, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE), Blocks.pumpkin});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiRawPumpkin), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.fish, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE), Blocks.pumpkin});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiCookedPumpkin), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.cooked_fished, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeIron, 1, OreDictionary.WILDCARD_VALUE), Blocks.pumpkin});
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemSushiCookedPumpkin), new Object[]{ACBlocks.blockSeaweed,new ItemStack(Items.cooked_fished, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ACItems.itemKnifeGold, 1, OreDictionary.WILDCARD_VALUE), Blocks.pumpkin});
+		
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentWood), "mbm"," sb","s m",
+				'm', Blocks.planks, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentBone), "mbm"," sb","s m",
+				'm', Items.bone, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentDiamond), "mbm"," sb","s m",
+				'm', Items.diamond, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentEmerald), "mbm"," sb","s m",
+				'm', Items.emerald, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentGold), "mbm"," sb","s m",
+				'm', Items.gold_ingot, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentIron), "mbm"," sb","s m",
+				'm', Items.iron_ingot, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentNetherbrick), "mbm"," sb","s m",
+				'm', Items.netherbrick, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
+		GameRegistry.addShapedRecipe(new ItemStack(ACItems.tridentStone), "mbm"," sb","s m",
+				'm', Blocks.cobblestone, 's', Items.stick, 'b', ACBlocks.blockSeaweed);
 		GameRegistry.addShapelessRecipe(ACItems.itemStackFlaskNaCl, new ItemStack(ACItems.itemSponge, 1, 1), ACItems.itemStackFlaskEmpty);
 		GameRegistry.addShapelessRecipe(ACItems.itemStackFlaskNaCl, new ItemStack(ACItems.itemSpongeRed, 1, 1), ACItems.itemStackFlaskEmpty);
 		GameRegistry.addShapelessRecipe(ACItems.itemRubberRaw.copy(), ACItems.itemStackFlaskCaOH.copy(), ACItems.itemGuayuleBranch.copy());
@@ -270,6 +339,66 @@ public class ACCraftingHandler implements IFuelHandler {
 		//GameRegistry.addRecipe(recipe);
 	}
 	
+	private void registerCustomWetsuits() {
+		ItemStack wetsuit = new ItemStack(ACItems.itemWetsuit);
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setString("skin", "spiderman");
+		tags.setInteger("dyecolor", 1);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 1), new ItemStack(Items.string));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "squid");
+		tags.setInteger("dyecolor", 4);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 4), new ItemStack(Items.dye, 1, 0));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "clownfish");
+		tags.setInteger("dyecolor", 14);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 14), new ItemStack(Items.fish, 1, 2));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "treky_com");
+		tags.setInteger("dyecolor",1);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 1), new ItemStack(Blocks.redstone_torch));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "treky_eng");
+		tags.setInteger("dyecolor",11);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 11), new ItemStack(Blocks.redstone_torch));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "treky_med");
+		tags.setInteger("dyecolor",4);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 4), new ItemStack(Blocks.redstone_torch));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "batman");
+		tags.setInteger("dyecolor",0);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 0), new ItemStack(Items.feather));
+		
+		wetsuit = new ItemStack(ACItems.itemWetsuit);
+		tags = new NBTTagCompound();
+		tags.setString("skin", "creeper");
+		tags.setInteger("dyecolor",10);
+		wetsuit.setTagCompound(tags);
+		GameRegistry.addShapelessRecipe(wetsuit.copy(), new ItemStack(ACItems.itemWetsuit), new ItemStack(Items.dye, 1, 10), new ItemStack(Items.gunpowder));
+		
+		
+	}
+
 	public void registerSmelting(){
 		GameRegistry.addSmelting(ACBlocks.blockSeaweed, new ItemStack(ACItems.itemSeaweedCooked), 0.2F);
 		GameRegistry.addSmelting(ACBlocks.blockAlgae, new ItemStack(ACItems.itemAlgaeCooked), 0.2F);

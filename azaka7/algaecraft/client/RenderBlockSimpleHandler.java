@@ -50,9 +50,9 @@ public class RenderBlockSimpleHandler implements ISimpleBlockRenderingHandler {
 		if(modelID == ACGameData.seaweedModelID){
 			return renderSeaweed(renderer, world, x, y, z, block);
 		}
-		if(modelID == ACGameData.waterBlockModelID){
+		/*if(modelID == ACGameData.waterBlockModelID){
 			return  renderWaterOnBasicBlock(renderer,world,x,y,z,block);
-		}
+		}*/
 		return false;
 	}
 	

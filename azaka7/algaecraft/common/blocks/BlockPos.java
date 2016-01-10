@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 import com.google.common.collect.AbstractIterator;
@@ -16,9 +15,9 @@ public class BlockPos extends Vec3i
 {
     /** The BlockPos with all coordinates 0 */
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0);
-    private static final int NUM_X_BITS = 1 + MathHelper.calculateLogBaseTwo(MathHelper.roundUpToPowerOfTwo(30000000));
+    private static final int NUM_X_BITS = 26;
     private static final int NUM_Z_BITS = NUM_X_BITS;
-    private static final int NUM_Y_BITS = 64 - NUM_X_BITS - NUM_Z_BITS;
+    private static final int NUM_Y_BITS = 64;
     private static final int Y_SHIFT = 0 + NUM_Z_BITS;
     private static final int X_SHIFT = Y_SHIFT + NUM_Y_BITS;
     private static final long X_MASK = (1L << NUM_X_BITS) - 1L;

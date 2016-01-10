@@ -57,6 +57,13 @@ public class ItemWetsuit extends ItemArmor {
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
     {
+		NBTTagCompound tags = stack.getTagCompound();
+		if(tags.hasKey("skin")){
+			String skin = tags.getString("skin");
+			if(skin != ""){
+				return AlgaeCraft.MODID+":textures/armor/wetsuit_"+skin+".png";
+			}
+		}
         return AlgaeCraft.MODID+":textures/armor/wetsuit_"+colors[this.getSuitColor(stack)]+".png";
     }
 	
@@ -89,7 +96,17 @@ public class ItemWetsuit extends ItemArmor {
 	
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		par3List.add("Color: "+colors[this.getSuitColor(par1ItemStack)]);
+		int color = this.getSuitColor(par1ItemStack);
+		if(color > 0){
+			par3List.add("Color: "+colors[this.getSuitColor(par1ItemStack)]);
+		}
+		NBTTagCompound tags = par1ItemStack.getTagCompound();
+		if(tags.hasKey("skin")){
+			String skin = tags.getString("skin");
+			if(skin != ""){
+				par3List.add("Skin: "+skin);
+			}
+		}
 	}
 	
 	public static ItemStack colorize(ItemStack suit, int color){

@@ -72,7 +72,9 @@ public class ItemBCD extends ItemArmor {
 			if(player.getEntityData().getBoolean(bcdFlight)){
 				player.capabilities.allowFlying = player.capabilities.isCreativeMode;
 				player.capabilities.isFlying = false;
-				player.capabilities.setFlySpeed(0.05F);
+				if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT){
+					player.capabilities.setFlySpeed(0.05F);
+				}
 				player.getEntityData().setBoolean(bcdFlight, false);
 			}
 			return;}
@@ -92,7 +94,9 @@ public class ItemBCD extends ItemArmor {
 				player.capabilities.allowFlying = player.capabilities.isCreativeMode;
 				//if(!defaultFlight){
 					player.capabilities.isFlying = true;
-					player.capabilities.setFlySpeed(0.0085F);
+					if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT){
+						player.capabilities.setFlySpeed(0.0085F);
+					}
 					player.motionY *= 0.6;
 					player.getEntityData().setBoolean(bcdFlight, true);
 				//}
@@ -105,7 +109,9 @@ public class ItemBCD extends ItemArmor {
 				player.capabilities.allowFlying = player.capabilities.isCreativeMode;
 				player.getEntityData().removeTag(bcdFlight);
 				player.capabilities.isFlying = false;
-				player.capabilities.setFlySpeed(0.05F);
+				if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT){
+					player.capabilities.setFlySpeed(0.05F);
+				}
 				player.getEntityData().setBoolean(bcdFlight, false);
 			}
 		}
@@ -277,6 +283,10 @@ public class ItemBCD extends ItemArmor {
 		}
 		par3List.add("BCD State: "+s);
 		ItemStack atank = this.createTankStack(par1ItemStack);
+		if(atank != null && atank.getItem() != null && atank.getItem() == ACItems.itemAirTankCreative){
+			par3List.add("Air Tank: \u221E");
+			return;
+		}
 		//if(atank == null){System.out.println("could not construct tank stack");}
 		int max = atank != null ? atank.getMaxDamage() : 0;
 		int amount = atank != null ? atank.getItemDamage() : 0;

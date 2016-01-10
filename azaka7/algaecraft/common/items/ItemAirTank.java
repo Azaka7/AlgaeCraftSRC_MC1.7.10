@@ -42,7 +42,12 @@ public class ItemAirTank extends Item {
 	@Override
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		par3List.add("Breaths: "+((getMaxDamage(par1ItemStack)-getDamage(par1ItemStack)))+"/"+(getMaxDamage(par1ItemStack)));
+		if(this == ACItems.itemAirTankCreative){
+			par3List.add("Breaths: \u221E");
+		}
+		else{
+			par3List.add("Breaths: "+((getMaxDamage(par1ItemStack)-getDamage(par1ItemStack)))+"/"+(getMaxDamage(par1ItemStack)));
+		}
 	}
 
 	//Used for rendering of tank

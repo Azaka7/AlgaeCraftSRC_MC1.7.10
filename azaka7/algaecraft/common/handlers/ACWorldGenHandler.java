@@ -3,6 +3,7 @@ package azaka7.algaecraft.common.handlers;
 import java.util.Random;
 
 import azaka7.algaecraft.common.ACConfiguration;
+import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.blocks.ACBlocks;
 import azaka7.algaecraft.common.world.ACBiomes;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -52,7 +53,9 @@ public class ACWorldGenHandler implements IWorldGenerator {
 	private void generateSurface(World world, Random random, int i, int j) {
 		
 		generateAlgaeForChunk(world, random, i, j);
-		generateGuayuleForChunk(world, random, i, j);
+		if(ACGameData.generateGuayule){
+			generateGuayuleForChunk(world, random, i, j);
+		}
 		generateSedimentForChunk(world, random, i, j);
 				
 		int microX = Math.round(i/3);
@@ -118,7 +121,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 		for(int n = 0; n < 4; n++){
 			int x = (i*16) + random.nextInt(16);
 			int z = (j*16) + random.nextInt(16);
-			if(BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), BiomeDictionary.Type.SWAMP)){
+			if(ACBiomes.isBiomeIDInList(world.getBiomeGenForCoords(x, z), ACGameData.biomeIDSwampList)){
 				int y = 63 + random.nextInt(3);
 				if(world.getBlock(x, y, z) == Blocks.air && (world.getBlock(x, y-1, z) == Blocks.water)){
 					world.setBlock(x, y, z, ACBlocks.blockAlgae);

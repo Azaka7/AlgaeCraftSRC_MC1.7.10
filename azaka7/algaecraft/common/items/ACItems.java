@@ -62,6 +62,7 @@ public class ACItems {
 		.setTextureName(AlgaeCraft.MODID+":calamari")
 		.setCreativeTab(AlgaeCraft.modTab)
 		.setUnlocalizedName(name("itemSquidFried"));
+	
 	public static Item itemSushiRaw = new ItemFood(6, 0.6F, false)
 		.setUnlocalizedName(name("sushiRaw"))
 		.setTextureName(AlgaeCraft.MODID+":sushiRaw")
@@ -70,6 +71,15 @@ public class ACItems {
 		.setUnlocalizedName(name("sushiCooked"))
 		.setTextureName(AlgaeCraft.MODID+":sushiCooked")
 		.setCreativeTab(AlgaeCraft.modTab);
+	public static Item itemSushiRawPumpkin = new ItemFood(13, 5.5F, false)
+		.setUnlocalizedName(name("sushiRawPumpkin"))
+		.setTextureName(AlgaeCraft.MODID+":sushiRawPumpkin")
+		.setCreativeTab(AlgaeCraft.modTab);
+	public static Item itemSushiCookedPumpkin = new ItemFood(16, 11.1F, false)
+		.setUnlocalizedName(name("sushiCookedPumpkin"))
+		.setTextureName(AlgaeCraft.MODID+":sushiCookedPumpkin")
+		.setCreativeTab(AlgaeCraft.modTab);
+	
 	public static Item itemKnifeIron = new ItemKnife(4.0D, 150)
 		.setTextureName(AlgaeCraft.MODID+":knife")
 		.setCreativeTab(AlgaeCraft.modTab)
@@ -110,7 +120,7 @@ public class ACItems {
 		.setTextureName(AlgaeCraft.MODID+":itemAirtankLarge")
 		.setCreativeTab(AlgaeCraft.modTab)
 		.setUnlocalizedName(name("itemAirTankLarge"));
-	public static Item itemAirTankCreative = new ItemAirTank(1, TankType.LARGE)
+	public static Item itemAirTankCreative = new ItemAirTank(Integer.MAX_VALUE, TankType.LARGE)
 	{
 		@Override
 		public void onCreated(ItemStack stack, World p_77622_2_, EntityPlayer p_77622_3_){
@@ -231,8 +241,12 @@ public class ACItems {
 		registerItem(itemSquidRaw, "squidRaw", modId,"foodRawSquid", "foodSquidRaw", "foodRawCalamari", "foodCalamariRaw");
 		registerItem(itemSquidCooked, "squidCooked", modId,"foodCookedSquid","foodSquidCooked","foodCalamariCooked","foodCookedCalamari");
 		registerItem(itemSquidFried, "squidFried", modId,"foodCalamariRingsCooked", "foodCookedCalamariRings", "foodFriedCalamariRings");
+		
 		registerItem(itemSushiRaw, "sushiRaw", modId,"foodSushiRaw","foodRawSushi");
 		registerItem(itemSushiCooked, "sushiCooked", modId,"foodSushiCooked","foodCookedSushi");
+		registerItem(itemSushiRawPumpkin, "sushiRawPumpkin", modId,"foodSushiRawPumpkin","foodRawSushiPumpkin");
+		registerItem(itemSushiCookedPumpkin, "sushiCookedPumpkin", modId,"foodSushiCookedPumpkin","foodCookedSushiPumpkin");
+		
 		registerItem(itemKnifeIron, "knifeIron", modId,"weaponKnifeIron","toolKnifeIron","itemKnifeIron","weaponIronKnife","toolIronKnife","itemIronKnife");
 		registerItem(itemKnifeGold, "knifeGold", modId,"weaponKnifeGold","toolKnifeGold","itemKnifeGold","weaponGoldKnife","toolGoldKnife","itemGoldKnife");
 		registerItem(itemLobster, "lobster", modId,"mobLobster","itemLobster","entityLobster","materialLobster");

@@ -5,19 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import azaka7.algaecraft.AlgaeCraft;
-import azaka7.algaecraft.common.handlers.ACPathingHandler.Pos;
-
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -27,13 +17,19 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
+import azaka7.algaecraft.common.handlers.ACPathingHandler.Pos;
+
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemTrident extends ItemSword {
 	
@@ -46,7 +42,6 @@ public class ItemTrident extends ItemSword {
 		super(material);
 		toolMaterial = material;
         this.attackDamage = 3.0F + material.getDamageVsEntity();
-        Materials.registerMaterialItems();
 	}
 	
 	@Override
@@ -109,7 +104,6 @@ public class ItemTrident extends ItemSword {
      */
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase p_111207_3_)
     {
-    	player.getItemInUseDuration();
     	return false;
     }
     
@@ -141,7 +135,6 @@ public class ItemTrident extends ItemSword {
         double yold = player.posY - 0.30000001192092896D + (double)player.getEyeHeight();
         double zold = player.posZ;//player.boundingBox.minZ+(player.width/2);
         
-        Minecraft.getMinecraft().playerController.getClass();
         pitch = (float) Math.toRadians(pitch);
         yaw = (float) Math.toRadians(yaw);
         double xnew = xold+(6*Math.sin(0-yaw)*Math.cos(pitch));
@@ -240,15 +233,9 @@ public class ItemTrident extends ItemSword {
     }
 	
 	public static class Materials{
-		public static final ToolMaterial bone = EnumHelper.addToolMaterial("BONE_AC", 0, 100, 3.0F, 0.5F, 18);
-		public static final ToolMaterial emerald = EnumHelper.addToolMaterial("EMERALD_GEM_AC", 2, 812, 8.5F, 4.0F, 12);
-		public static final ToolMaterial netherbrick = EnumHelper.addToolMaterial("NETHERBRICK_AC", 1, 128, 4.8F, 1.2F, 20);
-		
-		public static void registerMaterialItems(){
-			bone.customCraftingMaterial = Items.bone;
-			emerald.customCraftingMaterial = Items.emerald;
-			netherbrick.customCraftingMaterial = Items.netherbrick;
-		}
+		public static final ToolMaterial bone = EnumHelper.addToolMaterial("BONE_AC", 0, 100, 3.0F, 0.5F, 18).setRepairItem(new ItemStack(Items.bone));
+		public static final ToolMaterial emerald = EnumHelper.addToolMaterial("EMERALD_GEM_AC", 2, 812, 8.5F, 4.0F, 12).setRepairItem(new ItemStack(Items.emerald));
+		public static final ToolMaterial netherbrick = EnumHelper.addToolMaterial("NETHERBRICK_AC", 1, 128, 4.8F, 1.2F, 20).setRepairItem(new ItemStack(Items.netherbrick));
 	}
 
 }

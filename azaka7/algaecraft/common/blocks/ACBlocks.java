@@ -331,11 +331,11 @@ public class ACBlocks {
 			//String iBlockRegistry = "";
 			//String iItemRegistry = "";
 			//String mainData = "";
-			((Map) ReflectionHelper.findField(RegistrySimple.class, "registryObjects", registryObjects).get(ReflectionHelper.findField(GameData.class, "iBlockRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).replace("minecraft:sponge", blockSpongeYellow);
-			((Map) ReflectionHelper.findField(RegistryNamespaced.class, "field_148758_b").get(ReflectionHelper.findField(GameData.class, "iBlockRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).replace(blockSpongeYellow, "minecraft:sponge");
+			((Map) ReflectionHelper.findField(RegistrySimple.class, "registryObjects", registryObjects).get(ReflectionHelper.findField(GameData.class, "iBlockRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).put("minecraft:sponge", blockSpongeYellow);
+			((Map) ReflectionHelper.findField(RegistryNamespaced.class, "field_148758_b").get(ReflectionHelper.findField(GameData.class, "iBlockRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).put(blockSpongeYellow, "minecraft:sponge");
 			((ObjectIntIdentityMap) ReflectionHelper.findField(RegistryNamespaced.class, "underlyingIntegerMap", underlyingIntegerMap).get(ReflectionHelper.findField(GameData.class, "iBlockRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).func_148746_a(blockSpongeYellow, 19);
-			((Map) ReflectionHelper.findField(RegistrySimple.class, "registryObjects", registryObjects).get(ReflectionHelper.findField(GameData.class, "iItemRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).replace("minecraft:sponge", itemSpongeBlock);
-			((Map) ReflectionHelper.findField(RegistryNamespaced.class, "field_148758_b").get(ReflectionHelper.findField(GameData.class, "iItemRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).replace(itemSpongeBlock, "minecraft:sponge");
+			((Map) ReflectionHelper.findField(RegistrySimple.class, "registryObjects", registryObjects).get(ReflectionHelper.findField(GameData.class, "iItemRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).put("minecraft:sponge", itemSpongeBlock);
+			((Map) ReflectionHelper.findField(RegistryNamespaced.class, "field_148758_b").get(ReflectionHelper.findField(GameData.class, "iItemRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).put(itemSpongeBlock, "minecraft:sponge");
 			((ObjectIntIdentityMap) ReflectionHelper.findField(RegistryNamespaced.class, "underlyingIntegerMap", underlyingIntegerMap).get(ReflectionHelper.findField(GameData.class, "iItemRegistry").get(ReflectionHelper.findField(GameData.class, "mainData").get(null)))).func_148746_a(itemSpongeBlock, Block.getIdFromBlock(Blocks.sponge));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,17 +1,12 @@
 package azaka7.algaecraft.common;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import azaka7.algaecraft.common.handlers.ACKeyBindingHandler;
-import azaka7.algaecraft.common.items.ItemBCD;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import azaka7.algaecraft.common.handlers.ACKeyBindingHandler;
+import azaka7.algaecraft.common.items.ItemBCD;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class KeyBindingPacket extends AbstractPacket {
 	
@@ -23,8 +18,8 @@ public class KeyBindingPacket extends AbstractPacket {
 		keyCode = 0;
 	}
 
-	public KeyBindingPacket(KeyBinding key) {
-		keyCode = key.getKeyCode();
+	public KeyBindingPacket(int key) {
+		keyCode = key;
 	}
 	/*
 	public static void registerKeyBindToByte(KeyBinding key, byte byt){
@@ -60,15 +55,16 @@ public class KeyBindingPacket extends AbstractPacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void handleClientSide(EntityPlayer player) {
 		if(player.inventory.armorItemInSlot(2) == null){return;}
 		if(player.inventory.armorItemInSlot(2).getItem() != null &&  !(player.inventory.armorItemInSlot(2).getItem() instanceof ItemBCD)){return;}
 		// TODO Auto-generated method stub
-		if(ACKeyBindingHandler.bcdControlUp.getKeyCode() == keyCode){
+		if(keyCode==ACKeyBindingHandler.EnumKeyCommands.BCD_UP.ordinal()){
 			ItemBCD bcdItem = (ItemBCD) player.inventory.armorItemInSlot(2).getItem();
 			bcdItem.changeDo(player.inventory.armorItemInSlot(2), player, true, Side.CLIENT);
 		}
-		else if(ACKeyBindingHandler.bcdControlDown.getKeyCode() == keyCode){
+		else if(keyCode==ACKeyBindingHandler.EnumKeyCommands.BCD_DOWN.ordinal()){
 			ItemBCD bcdItem = (ItemBCD) player.inventory.armorItemInSlot(2).getItem();
 			bcdItem.changeDo(player.inventory.armorItemInSlot(2), player, false, Side.CLIENT);
 		}
@@ -79,11 +75,11 @@ public class KeyBindingPacket extends AbstractPacket {
 		// TODO Auto-generated method stub
 		if(player.inventory.armorItemInSlot(2)!= null && (player.inventory.armorItemInSlot(2).getItem() instanceof ItemBCD))
 		{
-			if(ACKeyBindingHandler.bcdControlUp.getKeyCode() == keyCode){
+			if(keyCode==1){
 				ItemBCD bcdItem = (ItemBCD) player.inventory.armorItemInSlot(2).getItem();
 				bcdItem.changeDo(player.inventory.armorItemInSlot(2), player, true, Side.SERVER);
 			}
-			else if(ACKeyBindingHandler.bcdControlDown.getKeyCode() == keyCode){
+			else if(keyCode==2){
 				ItemBCD bcdItem = (ItemBCD) player.inventory.armorItemInSlot(2).getItem();
 				bcdItem.changeDo(player.inventory.armorItemInSlot(2), player, false, Side.SERVER);
 			}
