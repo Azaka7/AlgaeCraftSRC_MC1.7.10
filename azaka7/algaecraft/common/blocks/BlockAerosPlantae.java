@@ -117,7 +117,7 @@ public class BlockAerosPlantae extends BlockBush implements IGrowable{
     }
 	
     @Override
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+	public void updateTick(World par1World, int par2, int par3, int par4, Random rand)
     {
     	if(!this.canBlockStay(par1World, par2, par3, par4)){
     		this.dropBlockAsItem(par1World, par2, par3, par4, new ItemStack(this,1,par1World.getBlockMetadata(par2, par3, par4)));
@@ -139,11 +139,11 @@ public class BlockAerosPlantae extends BlockBush implements IGrowable{
         if(par1World.getBlock(par2, par3, par4-1) == Blocks.air){
         	par1World.setBlock(par2, par3, par4-1, Blocks.flowing_water, 1, 3);
         }
-    	if(par5Random.nextInt(10)==0 && par5Random.nextBoolean()){
+    	if(rand.nextDouble() < ACGameData.aerosGrowthChance){
     		int metadata = par1World.getBlockMetadata(par2, par3, par4);
-    		this.tryToGrow(par1World,metadata,par2,par3,par4, par5Random);
+    		this.tryToGrow(par1World,metadata,par2,par3,par4, rand);
     	}
-        super.updateTick(par1World, par2, par3, par4, par5Random);
+        super.updateTick(par1World, par2, par3, par4, rand);
     }
     
     private boolean tryToGrow(World par1World, int par2Metadata, int x, int y, int z, Random r){
@@ -159,17 +159,20 @@ public class BlockAerosPlantae extends BlockBush implements IGrowable{
     {
         Block var6 = world.getBlock(x, y-1, z);
         Block var7 = world.getBlock(x, y+1, z);
-        boolean biome = false;
-        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
-        	if(world.getBiomeGenForCoords(x, z).biomeID == ACGameData.biomeIDOceanList[i]){
-        		biome = true;
-        		break;
-        	}
-        }
+
         boolean block = false;
         for(int i = 0; i < this.canPlantOn .length; i++){
         	if(var6.getMaterial() == this.canPlantOn[i] && var6.isSideSolid(world, x, y, z, ForgeDirection.UP)){
         		block = true;
+        		break;
+        	}
+        }
+        if(!block){return false;}
+        
+        boolean biome = false;
+        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
+        	if(world.getBiomeGenForCoords(x, z).biomeID == ACGameData.biomeIDOceanList[i]){
+        		biome = true;
         		break;
         	}
         }
@@ -178,21 +181,18 @@ public class BlockAerosPlantae extends BlockBush implements IGrowable{
         for(int x1 = -6; x1 <= 6; x1++){
         	for(int y1 = -6; y1 <= 6; y1++){
         		for(int z1 = -6; z1 <= 6; z1++){
-        			if(!(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter)){
-        				//break;
+        			if(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter){
+        				if(!biome && BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+                    		return true;
+                    	}
+                    	else if(biome && BlockWaterFilter.isLocationInvalid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+                    		return false;
+                    	}
         			}
-        			else if(BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
-                		filter = true;
-                		break;
-                	}
-                	else if(BlockWaterFilter.isLocationInvalid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
-                		badfilter = true;
-                		break;
-                	}
                 }
             }
         }
-        return block && (filter || (biome && !badfilter));
+        return biome;
     }
 	
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)

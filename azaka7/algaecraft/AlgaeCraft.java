@@ -18,6 +18,7 @@ import azaka7.algaecraft.common.handlers.ACPacketHandler;
 import azaka7.algaecraft.common.handlers.ACTickHandler;
 import azaka7.algaecraft.common.handlers.ACWorldGenHandler;
 import azaka7.algaecraft.common.items.ACItems;
+import azaka7.algaecraft.common.structures.StructureHandler;
 import azaka7.algaecraft.common.world.ACBiomes;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;

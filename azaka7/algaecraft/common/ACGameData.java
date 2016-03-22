@@ -36,12 +36,21 @@ public class ACGameData {
 	public static int spongeModelID;
 	public static int coralModelID;
 	public static int seaweedModelID;
+	public static int greekFireModelID;
+	public static int brazierModelID;
+	
+	public static int maxFishSpawn = 128;
 
-	//public static int waterBlockModelID;
-
+	public static double algaeGrowthChance = 0.125;
+	public static double coralGrowthChance = 0.05;
+	public static double seaweedGrowthChance = 0.015625;
+	public static double aerosGrowthChance = 0.05;
+	public static double spongeGrowthChance = 0.08;
+	public static double guayuleGrowthChance = 0.75;
+	
+	public static int filterUpdateRate = 40;
+	
 	private static final Class<?>[][] paramTypes = new Class[][] {{EnumCreatureType.class, Class.class, int.class, Material.class, boolean.class, boolean.class}};
-	public static final EnumCreatureType ambientWater = EnumHelper.addEnum(paramTypes, EnumCreatureType.class, "ambientWaterFish", EntityWaterMob.class, 40, Material.water, true, false);
-
 
 		public void configure(){
 			BiomeGenBase[] oceans = BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN);
@@ -55,7 +64,20 @@ public class ACGameData {
 				swampIDs[i] = swamps[i].biomeID;
 			}
 			ACConfiguration.startSection("General");
+			maxFishSpawn = ACConfiguration.getInt("Max Fish Count", 128, "Determines water mob spawning cap (AC Default = 128, Vanilla = 5)");
 			generateGuayule = ACConfiguration.getBool("Do Generate Guayule", true, "Does Guayule generate in the world? Note: setting to false will make certain parts of AlgaeCraft inaccessable without another mod that adds rubber.");
+			filterUpdateRate = ACConfiguration.getInt("Water Filter Update Rate", 40, "Water filters should update once every this many ticks. (Default = 40)");
+			ACConfiguration.endSection();
+			
+			ACConfiguration.startSection("Growth Rates");
+			
+			algaeGrowthChance = ACConfiguration.getDouble("Algae Growth Rate", 0.125, "The chance that Algae will try to grow in each direction each random block tick. (Default = 0.125 = 12.5% chance)");
+			coralGrowthChance = ACConfiguration.getDouble("Coral Growth Rate", 0.05, "The chance that Coral will try to grow each random block tick. (Default = 0.05 = 5% chance)");
+			seaweedGrowthChance = ACConfiguration.getDouble("Seaweed Growth Rate", 0.015625, "The chance that Seaweed will try to grow each random block tick. (Default = 0.015625 = 1.5625% chance)");
+			aerosGrowthChance = ACConfiguration.getDouble("Aeros Growth Rate", 0.05, "The chance that Aeros Plantae will try to grow each random block tick. (Default = 0.05 = 5% chance)");
+			spongeGrowthChance = ACConfiguration.getDouble("Max Sponge Growth Rate", 0.08, "The max chance that Sponge Spores will try to grow each random block tick (Top half of chance based on light level). (Default = 0.08 = 4%-8% chance)");
+			guayuleGrowthChance = ACConfiguration.getDouble("Guayule Growth Rate", 0.05, "The chance that Guayule will try to grow each random block tick. (Default = 0.05 = 5% chance)");
+			
 			ACConfiguration.endSection();
 			
 			ACConfiguration.startSection("Biome Definitions");
@@ -73,6 +95,10 @@ public class ACGameData {
 			if(spongeModelID < 0){spongeModelID = RenderingRegistry.getNextAvailableRenderId();}
 			seaweedModelID = ACConfiguration.getInt("Seaweed Model ID", -1);
 			if(seaweedModelID < 0){seaweedModelID = RenderingRegistry.getNextAvailableRenderId();}
+			greekFireModelID = ACConfiguration.getInt("Greek Fire Model ID", -1);
+			if(greekFireModelID < 0){greekFireModelID = RenderingRegistry.getNextAvailableRenderId();}
+			brazierModelID = ACConfiguration.getInt("Brazier Model ID", -1);
+			if(brazierModelID < 0){brazierModelID = RenderingRegistry.getNextAvailableRenderId();}
 			//waterBlockModelID = ACConfiguration.getInt("Special Wet Blocks Model ID", -1);
 			//if(waterBlockModelID < 0){waterBlockModelID = RenderingRegistry.getNextAvailableRenderId();}
 			
@@ -89,6 +115,14 @@ public class ACGameData {
 			enableRFDevices = ACConfiguration.getBool("Enable RF Devices", true, "Allow AlgaeCraft to automatically enable RF usage on certain devices when ThermalExpansion is detected (see forum for list)");
 			
 			ACConfiguration.endSection();
+		}
+		
+		public static BiomeGenBase[] getOceanBiomes(){
+			BiomeGenBase[] ret = new BiomeGenBase[biomeIDOceanList.length];
+			for(int i  = 0; i < biomeIDOceanList.length; i++){
+				ret[i] = BiomeGenBase.getBiome(biomeIDOceanList[i]);
+			}
+			return ret;
 		}
 
 }

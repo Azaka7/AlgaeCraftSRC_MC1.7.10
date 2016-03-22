@@ -95,7 +95,7 @@ public class BlockCoral extends BlockBush implements IGrowable{
     }
     
 	@Override
-    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    public void updateTick(World par1World, int par2, int par3, int par4, Random rand)
     {
     	if(!this.canBlockStay(par1World, par2, par3, par4)){
     		this.dropBlockAsItem(par1World, par2, par3, par4, new ItemStack(this,1,par1World.getBlockMetadata(par2, par3, par4)));
@@ -105,9 +105,9 @@ public class BlockCoral extends BlockBush implements IGrowable{
     		this.dropBlockAsItem(par1World, par2, par3, par4, new ItemStack(this,1,par1World.getBlockMetadata(par2, par3, par4)));
     		par1World.setBlock(par2, par3, par4, Blocks.water, 0, 3);
     	}
-    	if(par5Random.nextInt(10)==0 && par5Random.nextBoolean()){
+    	if(rand.nextDouble() < ACGameData.coralGrowthChance){
     		int metadata = par1World.getBlockMetadata(par2, par3, par4);
-    		this.tryToGrow(par1World,metadata,par2,par3,par4, par5Random);
+    		this.tryToGrow(par1World,metadata,par2,par3,par4, rand);
     	}
     	if(par1World.getBlock(par2+1, par3, par4) == Blocks.air){
         	par1World.setBlock(par2+1, par3, par4, Blocks.flowing_water, 1, 3);
@@ -121,7 +121,7 @@ public class BlockCoral extends BlockBush implements IGrowable{
         if(par1World.getBlock(par2, par3, par4-1) == Blocks.air){
         	par1World.setBlock(par2, par3, par4-1, Blocks.flowing_water, 1, 3);
         }
-        super.updateTick(par1World, par2, par3, par4, par5Random);
+        super.updateTick(par1World, par2, par3, par4, rand);
     }
     
     private boolean tryToGrow(World par1World, int par2Metadata, int x, int y, int z, Random r){
@@ -129,26 +129,18 @@ public class BlockCoral extends BlockBush implements IGrowable{
     		par1World.setBlock(x, y, z, this, par2Metadata-4, 2);
     		return true;
     	}
-    	else if(this.canBlockStay(par1World, x, y, z) && par2Metadata%8 <= 3 && par2Metadata%8 >= 0 && r.nextBoolean()){
+    	/*else if(this.canBlockStay(par1World, x, y, z) && par2Metadata%8 <= 3 && par2Metadata%8 >= 0 && r.nextBoolean()){
     		//System.out.println("Secrets await....");
     		return false;
-    	}
+    	}*/
     	return false;
     }
     
     @Override
     public boolean canBlockStay(World world, int x, int y, int z)
     {
-    	//System.out.println("canStay?");
         Block var6 = world.getBlock(x, y-1, z);
-        Block var7 = world.getBlock(x, y+1, z);
-        boolean biome = false;
-        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
-        	if(world.getBiomeGenForCoords(x, z).biomeID == ACGameData.biomeIDOceanList[i]){
-        		biome = true;
-        		break;
-        	}
-        }
+        
         boolean block = false;
         for(int i = 0; i < this.canPlantOn.length; i++){
         	if(var6.getMaterial() == this.canPlantOn[i] && var6.isSideSolid(world, x, y, z, ForgeDirection.UP)){
@@ -156,37 +148,33 @@ public class BlockCoral extends BlockBush implements IGrowable{
         		break;
         	}
         }
+        if(!block){return false;}
+        
+        boolean biome = false;
+        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
+        	if(world.getBiomeGenForCoords(x, z).biomeID == ACGameData.biomeIDOceanList[i]){
+        		biome = true;
+        		break;
+        	}
+        }
+        
         boolean filter = false;
         boolean badfilter = false;
         for(int x1 = -6; x1 <= 6; x1++){
         	for(int y1 = -6; y1 <= 6; y1++){
         		for(int z1 = -6; z1 <= 6; z1++){
-        			if(!(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter)){
-        				//System.out.println("not a filter");
-        				//break;
+        			if(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter){
+        				if(!biome && BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+                    		return true;
+                    	}
+                    	else if(biome && BlockWaterFilter.isLocationInvalid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+                    		return false;
+                    	}
         			}
-        			else if(BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
-                		//System.out.println("is valid");
-        				filter = true;
-                		break;
-                	}
-                	else if(BlockWaterFilter.isLocationInvalid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
-                		badfilter = true;
-                		break;
-                	}
                 }
             }
         }
-        return block && (filter || (biome && !badfilter));
-        /*if(block && (var7 == Blocks.water||var7 == Blocks.flowing_water)){
-        	if(biome && !(BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 1)||BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 2))){
-        		return true;
-        	}
-        	if(BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 0)||BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 3)){
-        		return true;
-        	}
-        }*/
-        //return false;
+        return biome;
     }
     
     @Override
@@ -291,38 +279,38 @@ public class BlockCoral extends BlockBush implements IGrowable{
     /**
      * Updates the blocks bounds based on its current state. Args: world, x, y, z
      */
-    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int x, int y, int z)
     {
-    	int m = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
-    	float par5 = 0;
-    	float par6 = 0;
-    	float par7 = 1;
-    	float parH = 1;
-    	float par8 = 1;
+    	int m = par1IBlockAccess.getBlockMetadata(x, y, z);
+    	float xmin = 0;
+    	float ymin = 0;
+    	float xmax = 1;
+    	float ymax = 1;
+    	float zmax = 1;
     	
     	if (m%8 == 6){//0.375F, 0.0F, 0.375F, 0.625F, 0.25F, 0.625F
-    		par5 = 0.375F;
-        	par6 = 0.375F;
-        	par7 = 0.625F;
-        	parH = 0.25F;
-        	par8 = 0.625F;
+    		xmin = 0.375F;
+        	ymin = 0.375F;
+        	xmax = 0.625F;
+        	ymax = 0.25F;
+        	zmax = 0.625F;
     	}
     	else if (m%8 == 2){//0.25F, 0.0F, 0.25F, 0.75F, 0.5F, 0.75F
-    		par5 = 0.25F;
-        	par6 = 0.25F;
-        	par7 = 0.75F;
-        	parH = 0.5F;
-        	par8 = 0.75F;
+    		xmin = 0.25F;
+        	ymin = 0.25F;
+        	xmax = 0.75F;
+        	ymax = 0.5F;
+        	zmax = 0.75F;
     	}
     	else{//0.125F, 0.0F, 0.125F, 0.875F, 0.75F, 0.875F
-    		par5 = 0.25F;
-        	par6 = 0.25F;
-        	par7 = 0.75F;
-        	parH = 0.75F;
-        	par8 = 0.75F;
+    		xmin = 0.25F;
+        	ymin = 0.25F;
+        	xmax = 0.75F;
+        	ymax = 0.75F;
+        	zmax = 0.75F;
     	}
     	
-    	this.setBlockBounds(par5, 0.0F, par6, par7, parH, par8);
+    	this.setBlockBounds(xmin, 0.0F, ymin, xmax, ymax, zmax);
     }
     
     @Override

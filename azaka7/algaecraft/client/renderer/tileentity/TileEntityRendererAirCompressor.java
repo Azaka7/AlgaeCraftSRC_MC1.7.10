@@ -30,13 +30,13 @@ public class TileEntityRendererAirCompressor extends TileEntitySpecialRenderer {
 	}
 	
 	//make itemblock that places appropriate metadata.
-	public void renderCompressor(TileEntityAirCompressor tileentity, double d0, double d1, double d2, float f){
+	public void renderCompressor(TileEntityAirCompressor tileentity, double x, double y, double z, float f){
 		tileentity.updateContainingBlockInfo();
 		int i = tileentity.getBlockMetadata();
 		model = new ModelAirCompressor(i);
 		GL11.glPushMatrix();
 		this.bindTexture(mainTexture);
-		GL11.glTranslatef((float)d0+0.5F, (float)d1+1.5F, (float)d2+0.5F);
+		GL11.glTranslatef((float)x+0.5F, (float)y+1.5F, (float)z+0.5F);
 		GL11.glRotatef(180, 0.0F, 0.0F, 1.0F);
 		float short1 = 0;
 		if (i == 0 || i == 1 || i == 2)
@@ -69,7 +69,7 @@ public class TileEntityRendererAirCompressor extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 		if(tank != null){
 			int fullAmount = tank.getMaxDamage();
-			this.renderLivingLabel(this.field_147501_a.field_147551_g, ""+(fullAmount - tank.getItemDamage())+"/"+fullAmount, d0, d1, d2, 3, tileentity);
+			this.renderLivingLabel(this.field_147501_a.field_147551_g, ""+(fullAmount - tank.getItemDamage())+"/"+fullAmount, x, y, z, 3, tileentity);
 		}
 	}
 	

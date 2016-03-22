@@ -29,6 +29,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BlockGuayule extends BlockBush implements IGrowable{
 	
 	private static IIcon iconSmall;
+	private static IIcon iconMid;
 	private static IIcon iconFull;
 
 	protected BlockGuayule() {
@@ -82,7 +83,7 @@ public class BlockGuayule extends BlockBush implements IGrowable{
     		this.dropBlockAsItem(world, x, y, z, new ItemStack(this,1,world.getBlockMetadata(x, y, z)));
     		world.setBlockToAir(x, y, z);
     	}
-    	else if(rand.nextInt(10)==0 && rand.nextBoolean()){
+    	else if(rand.nextDouble() < ACGameData.guayuleGrowthChance){
     		int metadata = world.getBlockMetadata(x, y, z);
     		this.tryToGrow(world,metadata,x,y,z, rand);
     	}
@@ -128,6 +129,7 @@ public class BlockGuayule extends BlockBush implements IGrowable{
     public void registerBlockIcons(IIconRegister par1IconRegister)
     {
     	iconSmall = par1IconRegister.registerIcon(AlgaeCraft.MODID+":guayuleSmall");
+    	iconMid = par1IconRegister.registerIcon(AlgaeCraft.MODID+":guayuleMid");
     	iconFull = par1IconRegister.registerIcon(AlgaeCraft.MODID+":guayuleFull");
     }
 
@@ -135,9 +137,9 @@ public class BlockGuayule extends BlockBush implements IGrowable{
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
     @Override
-    public IIcon getIcon(int par1, int par2)
+    public IIcon getIcon(int side, int meta)
     {
-        return par2 <= 2 ? iconSmall : iconFull;
+        return meta > 2 ? iconFull : (meta > 0 ? iconMid : iconSmall);
     }
     
     @Override
