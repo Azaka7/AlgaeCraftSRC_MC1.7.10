@@ -46,7 +46,7 @@ public class BlockSlabLimestone extends BlockSlab {
     	if(p_149691_2_ > 7){p_149691_2_ = p_149691_2_-8;}
     	if(p_149691_2_ > 3){p_149691_2_ = 0;}
     	
-    	return ACBlocks.blockLimestone.getIcon(p_149691_1_, p_149691_2_);
+    	return ACBlocks.limestone.getIcon(p_149691_1_, p_149691_2_);
     }
 
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
@@ -93,7 +93,7 @@ public class BlockSlabLimestone extends BlockSlab {
     
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player)
     {
-        return new ItemStack(ACBlocks.blockLimestoneSlab, 1, world.getBlockMetadata(x, y, z)%4);
+        return new ItemStack(ACBlocks.limestoneSlab, 1, world.getBlockMetadata(x, y, z)%4);
     }
 
 }

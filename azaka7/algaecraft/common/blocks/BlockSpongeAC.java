@@ -45,8 +45,8 @@ public class BlockSpongeAC extends BlockSponge{
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister par1IconRegister)
     {
-		if(this == ACBlocks.blockSpongeRed){
-			ACBlocks.blockSpongeYellow.registerBlockIcons(par1IconRegister);
+		if(this == ACBlocks.spongeRed){
+			ACBlocks.spongeYellow.registerBlockIcons(par1IconRegister);
 		}
     	iconDry = par1IconRegister.registerIcon(AlgaeCraft.MODID+":"+imgNameDry);
     	iconWet = par1IconRegister.registerIcon(AlgaeCraft.MODID+":"+imgNameWet);

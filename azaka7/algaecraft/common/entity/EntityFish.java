@@ -50,27 +50,7 @@ public class EntityFish extends EntityWaterMob
     public EntityFish(World par1World, int i){
     	super(par1World);
     	this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
-    	/*if(i == -1){
-    		int r = this.rand.nextInt(100);
-    		if(r<60){
-    			i = 0;
-    		}
-    		else if((r-=60) < 25){
-    			i = 1;
-    		}
-    		else if((r-=25) < 13){
-    			i = 3;
-    		}
-    		else{
-    			i = 2;
-    		}
-    	}
-    	else{
-    		if(i>3){
-    			i=0;
-    		}
-    	}
-		this.fishType = i;*/
+    	
     	this.setType(i);
     	this.setSize(0.4F, 0.4F);
     }
@@ -90,7 +70,26 @@ public class EntityFish extends EntityWaterMob
     
     private void setType(int i){
     	if(i == -1){
-    		if(this == null || this.worldObj == null || this.worldObj.getBiomeGenForCoords((int)Math.round(this.posX), (int)Math.round(this.posY)) == null){
+    		if(this.worldObj == null){
+    			int r = this.rand.nextInt(100);
+        		if(r<60){
+        			i = 0;
+        		}
+        		else if((r-=60) < 25){
+        			i = 1;
+        		}
+        		else if((r-=25) < 13){
+        			i = 3;
+        		}
+        		else{
+        			i = 2;
+        		}
+        		this.fishType = i;
+        		this.dataWatcher.updateObject(13, Byte.valueOf((byte)i));
+        		return;
+    		}
+    		BiomeGenBase biome = this.worldObj.getBiomeGenForCoords((int)Math.round(this.posX), (int)Math.round(this.posZ));
+    		if(biome == null){
     			int r = this.rand.nextInt(100);
         		if(r<60){
         			i = 0;
@@ -105,13 +104,13 @@ public class EntityFish extends EntityWaterMob
         			i = 2;
         		}
     		}
-    		else if(this.worldObj.getBiomeGenForCoords((int)Math.round(this.posX), (int)Math.round(this.posY)) == BiomeGenBase.river){
+    		else if(biome == BiomeGenBase.river){
     			i = 0;
     		}
-    		else if(this.worldObj.getBiomeGenForCoords((int)Math.round(this.posX), (int)Math.round(this.posY)) == BiomeGenBase.swampland){
+    		else if(biome == BiomeGenBase.swampland){
     			i = 1;
     		}
-    		else if(this.worldObj.getBiomeGenForCoords((int)Math.round(this.posX), (int)Math.round(this.posY)) == BiomeGenBase.mushroomIslandShore){
+    		else if(biome == BiomeGenBase.mushroomIslandShore){
     			if(this.worldObj.rand.nextBoolean()){
     			i = 2;
     			}else{i=3;}
@@ -133,9 +132,7 @@ public class EntityFish extends EntityWaterMob
     		}
     	}
     	else{
-    		if(i>3){
-    			i=0;
-    		}
+    		i = i%4;
     	}
 		this.fishType = i;
     	//this.getEntityData().setInteger("fishtype", i);
@@ -266,8 +263,8 @@ public class EntityFish extends EntityWaterMob
     //public float prevSquidPitch;
     //public float squidYaw;
     //public float prevSquidYaw;
-    public float squidRotation;
-    public float prevSquidRotation;
+    public float rotation;
+    public float prevRotation;
     //public float tentacleAngle;
     //public float prevTentacleAngle;
     
@@ -275,26 +272,23 @@ public class EntityFish extends EntityWaterMob
     {
         super.onLivingUpdate();
         
-        EntityPlayer nearestPlayerInRange = (EntityPlayer) this.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, this.boundingBox.expand(1D, 1D, 1D), this);
-        this.scared = nearestPlayerInRange != null;
-        
-        if(this.getFishType() == 3 && this.scared){
-    		nearestPlayerInRange.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 1, false));
+        if(this.getFishType() == 3){
+        	EntityPlayer nearestPlayerInRange = (EntityPlayer) this.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, this.boundingBox.expand(1D, 1D, 1D), this);
+            this.scared = nearestPlayerInRange != null;
+            if(this.scared)
+            	nearestPlayerInRange.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 1, false));
     	}
         
-        //this.prevSquidPitch = this.squidPitch;
-        //this.prevSquidYaw = this.squidYaw;
-        this.prevSquidRotation = this.squidRotation;
-        //this.prevTentacleAngle = this.tentacleAngle;
-        this.squidRotation += this.rotationVelocity;
+        this.prevRotation = this.rotation;
+        this.rotation += this.rotationVelocity;
 
-        if (this.squidRotation > ((float)Math.PI * 2F))
+        if (this.rotation > ((float)Math.PI * 2F))
         {
-            this.squidRotation -= ((float)Math.PI * 2F);
+            this.rotation -= ((float)Math.PI * 2F);
 
             if (this.rand.nextInt(10) == 0)
             {
-                this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+                this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.1F;
             }
         }
 
@@ -302,11 +296,10 @@ public class EntityFish extends EntityWaterMob
         {
             float f;
 
-            if (this.squidRotation < (float)Math.PI)
+            if (this.rotation < (float)Math.PI)
             {
-                f = this.squidRotation / (float)Math.PI;
-                //this.tentacleAngle = MathHelper.sin(f * f * (float)Math.PI) * (float)Math.PI * 0.25F;
-
+                f = this.rotation / (float)Math.PI;
+                
                 if ((double)f > 0.75D)
                 {
                     this.randomMotionSpeed = 1.0F;
@@ -319,7 +312,6 @@ public class EntityFish extends EntityWaterMob
             }
             else
             {
-                //this.tentacleAngle = 0.0F;
                 this.randomMotionSpeed *= 0.9F;
                 this.field_70871_bB *= 0.99F;
             }
@@ -334,13 +326,10 @@ public class EntityFish extends EntityWaterMob
             f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
             this.renderYawOffset += (-((float)Math.atan2(this.motionX, this.motionZ)) * 180.0F / (float)Math.PI - this.renderYawOffset) * 0.1F;
             this.rotationYaw = this.renderYawOffset;
-            //this.squidYaw += (float)Math.PI * this.field_70871_bB * 1.5F;
-            //this.squidPitch += (-((float)Math.atan2((double)f, this.motionY)) * 180.0F / (float)Math.PI - this.squidPitch) * 0.1F;
         }
         else
         {
-            //this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.squidRotation)) * (float)Math.PI * 0.25F;
-
+            
             if (!this.worldObj.isRemote)
             {
                 this.motionX = 0.0D;
@@ -348,8 +337,7 @@ public class EntityFish extends EntityWaterMob
                 this.motionY *= 0.9800000190734863D;
                 this.motionZ = 0.0D;
             }
-
-            //this.squidPitch = (float)((double)this.squidPitch + (double)(-90.0F - this.squidPitch) * 0.02D);
+            
         }
     }
 

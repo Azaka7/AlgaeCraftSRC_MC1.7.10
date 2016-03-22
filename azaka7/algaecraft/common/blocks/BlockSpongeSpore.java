@@ -47,7 +47,7 @@ public class BlockSpongeSpore extends BlockBush implements IGrowable{
         return false;
     }
 	
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+	public void updateTick(World par1World, int par2, int par3, int par4, Random rand)
     {
 		if (!par1World.isRemote)
         {
@@ -68,7 +68,8 @@ public class BlockSpongeSpore extends BlockBush implements IGrowable{
         if(par1World.getBlock(par2, par3, par4-1) == Blocks.air){
         	par1World.setBlock(par2, par3, par4-1, Blocks.flowing_water, 1, 3);
         }
-        if((par5Random.nextInt(10-(Math.round(par1World.getBlockLightValue(par2, par3, par4)/5)))==0)){
+        double scale = ACGameData.spongeGrowthChance / 0.08D;
+        if(rand.nextDouble() < scale*0.04D + scale*0.04D*par1World.getBlockLightValue(par2, par3, par4)/15.0D){
     		if(par1World.getBlock(par2, par3, par4)==this && par1World.getBlockMetadata(par2, par3, par4)<=1){
     			par1World.setBlock(par2, par3, par4, this, par1World.getBlockMetadata(par2, par3, par4)+1, 2);
     		}
@@ -105,13 +106,7 @@ public class BlockSpongeSpore extends BlockBush implements IGrowable{
     {
         Block below = par1World.getBlock(par2, par3-1, par4);
         Block above = par1World.getBlock(par2, par3+1, par4);
-        boolean biome = false;
-        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
-        	if(par1World.getBiomeGenForCoords(par2, par4).biomeID == ACGameData.biomeIDOceanList[i]){
-        		biome = true;
-        		break;
-        	}
-        }
+
         boolean block = false;
         for(int i = 0; i < canPlantOn.length; i++){
         	if(below.getMaterial() == canPlantOn[i]){
@@ -119,16 +114,7 @@ public class BlockSpongeSpore extends BlockBush implements IGrowable{
         		break;
         	}
         }
-        /*if(block&&(var7 == Block.waterMoving.blockID||var7 == Block.waterStill.blockID)){
-        	if(biome && !(BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 1)||BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 2))){
-        		
-        		return true;
-        	}
-        	if(BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 0)||BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 3)){
-        		return true;
-        	}
-        }*/
-        return block;// && biome;
+        return block;
     }
     
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)

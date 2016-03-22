@@ -34,20 +34,25 @@ public class BlockSeaweed extends Block {
     {
 		Block blockBelow = world.getBlock(x, y-1, z);
 		//boolean belowIsHard = (blockIDBelow == Block.cobblestone.blockID || blockIDBelow == Block.stone.blockID || blockIDBelow == Block.cobblestoneMossy.blockID || blockIDBelow == Block.gravel.blockID || blockIDBelow == Block.sandStone.blockID);
-		boolean aboveIsWater = (world.getBlock(x, y+1, z) == Blocks.water || world.getBlock(x, y+1, z) == Blocks.flowing_water);
+		boolean aboveIsWater = (world.getBlock(x, y+1, z).getMaterial() == Material.water);
 		boolean belowIsSeaweed = (world.getBlock(x, y-1, z)==this);
-		boolean aboveIsSeaweed = (world.getBlock(x, y+1, z)==this);
-		boolean biome = false;
-        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
-        	if(world.getBiomeGenForCoords(x, z).biomeID == ACGameData.biomeIDOceanList[i]){
-        		biome = true;
-        		break;
-        	}
-        }
+		//boolean aboveIsSeaweed = (world.getBlock(x, y+1, z)==this);
+
         boolean belowIsHard = false;
         for(int i = 0; i < canPlantOn.length; i++){
         	if(blockBelow.getMaterial() == canPlantOn[i]){
         		belowIsHard = true;
+        		break;
+        	}
+        }
+        
+        if(!((belowIsHard||belowIsSeaweed) && aboveIsWater)){return false;}
+        if(belowIsSeaweed){return true;}
+		
+		boolean biome = false;
+        for(int i = 0; i < ACGameData.biomeIDOceanList.length; i++){
+        	if(world.getBiomeGenForCoords(x, z).biomeID == ACGameData.biomeIDOceanList[i]){
+        		biome = true;
         		break;
         	}
         }
@@ -56,33 +61,20 @@ public class BlockSeaweed extends Block {
         for(int x1 = -6; x1 <= 6; x1++){
         	for(int y1 = -6; y1 <= 6; y1++){
         		for(int z1 = -6; z1 <= 6; z1++){
-        			if(!(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter)){
-        				//break;
+        			if(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter){
+        				if(!biome && BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+                    		return true;
+                    	}
+                    	else if(biome && BlockWaterFilter.isLocationInvalid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+                    		return false;
+                    	}
         			}
-        			else if(BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
-                		filter = true;
-                		break;
-                	}
-                	else if(BlockWaterFilter.isLocationInvalid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
-                		badfilter = true;
-                		break;
-                	}
                 }
             }
         }
-        boolean block = (belowIsHard||belowIsSeaweed) && (aboveIsWater||aboveIsSeaweed);
-        return block && (filter || (biome && !badfilter));
-        /*
-        if((belowIsHard||belowIsSeaweed)&&(aboveIsWater||aboveIsSeaweed)){
-        	if(biome &&!(BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 1)||BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 2))){
-        		return true;
-        	}
-        	if(BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 0)||BlockFilter.isBlockFiltered(par1World, par2, par3, par4, 3)){
-        		return true;
-        	}
-        }
-        return false;*/
+        return biome;
     }
+	
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
 	{
 		return this.canBlockStay(par1World, par2, par3, par4);
@@ -109,7 +101,8 @@ public class BlockSeaweed extends Block {
         }
     }
 	
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+	@Override
+	public void updateTick(World par1World, int par2, int par3, int par4, Random rand)
     {
         if (!par1World.isRemote)
         {
@@ -129,7 +122,7 @@ public class BlockSeaweed extends Block {
             if(par1World.getBlock(par2, par3, par4-1) == Blocks.air){
             	par1World.setBlock(par2, par3, par4-1, Blocks.flowing_water, 1, 3);
             }
-        	if((par5Random.nextInt(8)==1) && (par5Random.nextInt(200)>(par5Random.nextInt(50)+150))){
+        	if(rand.nextDouble() < ACGameData.seaweedGrowthChance){
         		if(this.canPlaceBlockAt(par1World, par2, par3+1, par4)){
         			par1World.setBlock(par2, par3+1, par4, this, 0, 3);
         		}
@@ -137,6 +130,7 @@ public class BlockSeaweed extends Block {
         }
     }
 	
+	@Override
 	public void onBlockHarvested(World par1World, int par2, int par3, int par4, int par5, EntityPlayer par6EntityPlayer) {
 		if (!par1World.isRemote){
 			if(!par6EntityPlayer.capabilities.isCreativeMode){
@@ -149,6 +143,7 @@ public class BlockSeaweed extends Block {
 		par1World.setBlock(par2, par3, par4, Blocks.water, 0, 3);
 	}
 	
+	@Override
 	public void setBlockBoundsForItemRender()
     {
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
