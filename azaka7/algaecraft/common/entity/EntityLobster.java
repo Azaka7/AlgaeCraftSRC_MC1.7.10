@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -220,15 +221,16 @@ public class EntityLobster extends EntityWaterMob
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        int i = this.rand.nextInt(3)-2;
+        int i = this.rand.nextInt(3)-1;
         int x = (int)Math.round(this.posX)+i;
-        i = this.rand.nextInt(3)-2;
+        i = this.rand.nextInt(3)-1;
         int y = (int)Math.round(this.posY)+i;
-        i = this.rand.nextInt(3)-2;
+        i = this.rand.nextInt(3)-1;
         int z = (int)Math.round(this.posZ)+i;
-        if(this.worldObj.getBlock(x, y, z) == ACBlocks.blockLobsterCage){
-        	if(worldObj.getBlockMetadata(x, y, z) ==0){
-        		((TileEntityCage) worldObj.getTileEntity(x, y, z)).setCreature(this);
+        TileEntity tile = worldObj.getTileEntity(x, y, z);
+        if(tile instanceof TileEntityCage){
+        	if(tile.blockMetadata == 0){
+        		((TileEntityCage) tile).setCreature(this);
         		this.setDead();
         	}
         }

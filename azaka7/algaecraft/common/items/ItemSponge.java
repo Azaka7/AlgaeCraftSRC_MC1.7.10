@@ -68,116 +68,116 @@ public class ItemSponge extends Item {
     }
 	
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer entityPlayer)
     {
-        float var4 = 1.0F;
-        double var5 = par3EntityPlayer.prevPosX + (par3EntityPlayer.posX - par3EntityPlayer.prevPosX) * (double)var4;
-        double var7 = par3EntityPlayer.prevPosY + (par3EntityPlayer.posY - par3EntityPlayer.prevPosY) * (double)var4 + 1.62D - (double)par3EntityPlayer.yOffset;
-        double var9 = par3EntityPlayer.prevPosZ + (par3EntityPlayer.posZ - par3EntityPlayer.prevPosZ) * (double)var4;
-        this.isWet = (par1ItemStack.getItemDamage() == 1);
+        float var4 = 1.0F; 
+        double x = entityPlayer.prevPosX + (entityPlayer.posX - entityPlayer.prevPosX) * (double)var4;
+        double y = entityPlayer.prevPosY + (entityPlayer.posY - entityPlayer.prevPosY) * (double)var4 + 1.62D - (double)entityPlayer.yOffset;
+        double z = entityPlayer.prevPosZ + (entityPlayer.posZ - entityPlayer.prevPosZ) * (double)var4;
+        this.isWet = (stack.getItemDamage() == 1);
         boolean isNotWet = !this.isWet;
-        MovingObjectPosition var12 = this.getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, isNotWet);
+        MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, entityPlayer, isNotWet);
 
-        if (var12 == null)
+        if (mop == null)
         {
-            return par1ItemStack;
+            return stack;
         }
         else
         {
-            if (var12.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+            if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
-                int var13 = var12.blockX;
-                int var14 = var12.blockY;
-                int var15 = var12.blockZ;
+                int x1 = mop.blockX;
+                int y1 = mop.blockY;
+                int z1 = mop.blockZ;
 
-                if (!par2World.canMineBlock(par3EntityPlayer, var13, var14, var15))
+                if (!world.canMineBlock(entityPlayer, x1, y1, z1))
                 {
-                    return par1ItemStack;
+                    return stack;
                 }
 
                 if (isNotWet)
                 {
-                    if (!par3EntityPlayer.canPlayerEdit((int)(Math.round(var5)), (int)Math.round(var7), (int)Math.round(var9), var12.sideHit, par1ItemStack))
+                    if (!entityPlayer.canPlayerEdit((int)(Math.round(x)), (int)Math.round(y), (int)Math.round(z), mop.sideHit, stack))
                     {
-                        return par1ItemStack;
+                        return stack;
                     }
 
-                    if (par2World.getBlock(var13, var14, var15).getMaterial() == Material.water && par2World.getBlockMetadata(var13, var14, var15) == 0)
+                    if (world.getBlock(x1, y1, z1).getMaterial() == Material.water && world.getBlockMetadata(x1, y1, z1) == 0)
                     {
-                        par2World.setBlock(var13, var14, var15, Blocks.air, 0, 3);
+                        world.setBlock(x1, y1, z1, Blocks.air, 0, 3);
 
-                        if (par3EntityPlayer.capabilities.isCreativeMode)
+                        if (entityPlayer.capabilities.isCreativeMode)
                         {
-                            return par1ItemStack;
+                            return stack;
                         }
 
-                        if (--par1ItemStack.stackSize <= 0)
+                        if (--stack.stackSize <= 0)
                         {
                             //return new ItemStack(this, 1, 1);
                         }
 
-                        if (!par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(this,1,1)))
+                        if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(this,1,1)))
                         {
-                            par3EntityPlayer.entityDropItem(new ItemStack(this, 1, 1), 0F);
+                            entityPlayer.entityDropItem(new ItemStack(this, 1, 1), 0F);
                         }
 
-                        return par1ItemStack;
+                        return stack;
                     }
                 }
                 else
                 {
-                    if (var12.sideHit == 0)
+                    if (mop.sideHit == 0)
                     {
-                        --var14;
+                        --y1;
                     }
 
-                    if (var12.sideHit == 1)
+                    if (mop.sideHit == 1)
                     {
-                        ++var14;
+                        ++y1;
                     }
 
-                    if (var12.sideHit == 2)
+                    if (mop.sideHit == 2)
                     {
-                        --var15;
+                        --z1;
                     }
 
-                    if (var12.sideHit == 3)
+                    if (mop.sideHit == 3)
                     {
-                        ++var15;
+                        ++z1;
                     }
 
-                    if (var12.sideHit == 4)
+                    if (mop.sideHit == 4)
                     {
-                        --var13;
+                        --x1;
                     }
 
-                    if (var12.sideHit == 5)
+                    if (mop.sideHit == 5)
                     {
-                        ++var13;
+                        ++x1;
                     }
 
-                    if (!par3EntityPlayer.capabilities.allowEdit)
+                    if (!entityPlayer.capabilities.allowEdit)
                     {
-                        return par1ItemStack;
+                        return stack;
                     }
 
-                    if (this.cauldronInteraction(par1ItemStack, par2World, par3EntityPlayer)
-                    		|| this.func_77875_a(par2World, var5, var7, var9, var13, var14, var15) && !par3EntityPlayer.capabilities.isCreativeMode)
+                    if (this.cauldronInteraction(stack, world, entityPlayer)
+                    		|| this.func_77875_a(world, x, y, z, x1, y1, z1) && !entityPlayer.capabilities.isCreativeMode)
                     {
-                    	if (--par1ItemStack.stackSize <= 0)
+                    	if (--stack.stackSize <= 0)
                         {
                             //return new ItemStack(this, 1, 1);
                         }
 
-                        if (!par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(this,1,0)))
+                        if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(this,1,0)))
                         {
-                            par3EntityPlayer.entityDropItem(new ItemStack(this, 1, 0),0F);
+                            entityPlayer.entityDropItem(new ItemStack(this, 1, 0),0F);
                         }
                     }
                 }
             }
 
-            return par1ItemStack;
+            return stack;
         }
     }
 	

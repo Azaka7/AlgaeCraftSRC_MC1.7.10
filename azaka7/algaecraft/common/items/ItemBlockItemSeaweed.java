@@ -30,9 +30,9 @@ public class ItemBlockItemSeaweed extends ItemBlockItem {
         }
         else if (par2EntityPlayer.canPlayerEdit(par4, par5, par6, par7, par1ItemStack))
         {
-            if (ACBlocks.blockSeaweed.canPlaceBlockAt(par3World, par4, par5+1, par6))
+            if (ACBlocks.seaweed.canPlaceBlockAt(par3World, par4, par5+1, par6))
             {
-                par3World.setBlock(par4, par5 + 1, par6, ACBlocks.blockSeaweed, 0, 2);
+                par3World.setBlock(par4, par5 + 1, par6, ACBlocks.seaweed, 0, 2);
                 --par1ItemStack.stackSize;
                 return true;
             }

@@ -5,7 +5,11 @@ import java.util.List;
 
 import azaka7.algaecraft.AlgaeCraft;
 import azaka7.algaecraft.common.ACGameData;
+import azaka7.algaecraft.common.blocks.BlockPos;
+import azaka7.algaecraft.common.blocks.BlockWaterFilter;
 import azaka7.algaecraft.common.handlers.ACEventHandler;
+import azaka7.algaecraft.common.structures.*;
+import azaka7.algaecraft.common.tileentity.TileEntityWaterFilter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -18,8 +22,10 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -27,6 +33,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.entity.item.ItemEvent;
@@ -35,8 +42,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 public class ItemFlask extends Item {
 	
 	//public static String[] itemNames = new String[]{"Empty","Water","Salt Water","Sodium Hydroxide","CraftingNaOH","CraftingSaltWater"};
-	public static String[] iconNames = new String[]{"Empty","Fresh","Salt","NaOH","NaOH","Salt"};
-	public static IIcon[] itemIcons = new IIcon[3];
+	public static String[] iconNames = new String[]{"Empty","Fresh","Salt","NaOH","NaOH","Salt","Tar"};
+	public static IIcon[] itemIcons = new IIcon[4];
 	public static PotionEffect[] itemEffects = new PotionEffect[]{};
 	
 	Item parent = null;
@@ -58,6 +65,21 @@ public class ItemFlask extends Item {
 		itemIcons = new IIcon[iconNames.length];
 		for(int i = 0; i < itemIcons.length; i ++){
 			itemIcons[i] = par1IconRegister.registerIcon(AlgaeCraft.MODID+":flask"+iconNames[i]);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b0)
+	{
+		super.addInformation(stack, player, list, b0);
+		int meta = stack.getItemDamage();
+		if(meta == ACItems.itemStackFlaskH2CO3.getItemDamage()){
+			list.add(StatCollector.translateToLocal(AlgaeCraft.MODID+".craft.H2CO3_1"));
+			list.add(StatCollector.translateToLocal(AlgaeCraft.MODID+".craft.H2CO3_2"));
+		} else if(meta == ACItems.itemStackFlaskTar.getItemDamage()){
+			list.add(StatCollector.translateToLocal(AlgaeCraft.MODID+".craft.tar"));
+		} else if(meta == ACItems.itemStackFlaskEmpty.getItemDamage()){
+			list.add(StatCollector.translateToLocal(AlgaeCraft.MODID+".craft.waterFlask"));
 		}
 	}
 	
@@ -208,6 +230,12 @@ public class ItemFlask extends Item {
                     		aspect = 2;
                     	}
                     }
+                    
+                    if(aspect == 2 && this.isPosFresh(par2World, i, j, k)){
+                    	aspect = 1;
+                    } else if(aspect != 2 && this.isPosSalty(par2World, i, j, k)){
+                    	aspect = 2;
+                    }
 
                     if (par1ItemStack.stackSize <= 0)
                     {
@@ -225,21 +253,84 @@ public class ItemFlask extends Item {
         }
     }
 	
+	private boolean isPosSalty(World world, int x, int y, int z){
+		for(int x1 = -6; x1 <= 6; x1++){
+        	for(int y1 = -6; y1 <= 6; y1++){
+        		for(int z1 = -6; z1 <= 6; z1++){
+        			if(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter 
+        					&& BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.OCEAN, x+x1, y+y1, z+z1)){
+        				return true;
+                	}
+                }
+            }
+        }
+		return false;
+	}
+	
+	private boolean isPosFresh(World world, int x, int y, int z){
+		for(int x1 = -6; x1 <= 6; x1++){
+        	for(int y1 = -6; y1 <= 6; y1++){
+        		for(int z1 = -6; z1 <= 6; z1++){
+        			if(world.getTileEntity(x+x1, y+y1, z+z1) instanceof TileEntityWaterFilter 
+        					&& BlockWaterFilter.isLocationValid(world, x, y, z, BlockWaterFilter.EnumWaterType.DEFAULT, x+x1, y+y1, z+z1)){
+        				return true;
+                	}
+                }
+            }
+        }
+		return false;
+	}
+	
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entity){
 		ItemStack stack = entity.getEntityItem();
-		if(stack.getItemDamage() != ACItems.itemStackFlaskWater.getItemDamage()){return false;}
-		if(stack.stackTagCompound == null){stack.stackTagCompound = new NBTTagCompound();}
-		if(!stack.stackTagCompound.hasKey("timer")){
-			stack.stackTagCompound.setInteger("timer", 0);
+		if(stack.getItemDamage() == ACItems.itemStackFlaskWater.getItemDamage())
+		{
+			if(stack.stackTagCompound == null){stack.stackTagCompound = new NBTTagCompound();}
+			if(!stack.stackTagCompound.hasKey("timer")){
+				stack.stackTagCompound.setInteger("timer", 0);
+			}
+			if(entity.worldObj.getBlock(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY)-1, MathHelper.floor_double(entity.posZ)) == Blocks.lit_furnace){
+				stack.stackTagCompound.setInteger("timer", stack.stackTagCompound.getInteger("timer") + 1);
+			}
+			if(stack.stackTagCompound.getInteger("timer") > 395){
+				ItemStack ret = ACItems.itemStackFlaskH2CO3.copy();
+				ret.stackSize = stack.stackSize;
+				entity.setEntityItemStack(ret);
+			}
 		}
-		if(entity.worldObj.getBlock(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY)-1, MathHelper.floor_double(entity.posZ)) == Blocks.lit_furnace){
-			stack.stackTagCompound.setInteger("timer", stack.stackTagCompound.getInteger("timer") + 1);
-		}
-		if(stack.stackTagCompound.getInteger("timer") > 395){
-			ItemStack ret = ACItems.itemStackFlaskH2CO3.copy();
-			ret.stackSize = stack.stackSize;
-			entity.setEntityItemStack(ret);
+		if(stack.getItemDamage() == ACItems.itemStackFlaskEmpty.getItemDamage())
+		{
+			if(stack.stackTagCompound == null){stack.stackTagCompound = new NBTTagCompound();}
+			if(!stack.stackTagCompound.hasKey("timer")){
+				stack.stackTagCompound.setInteger("timer", 0);
+			}
+			World world = entity.worldObj;
+			if(StructureHandler.isPosAtStructureOrigin(world, new BlockPos(entity.posX, entity.posY, entity.posZ), ACStructures.tarKiln)){
+				stack.stackTagCompound.setInteger("timer", stack.stackTagCompound.getInteger("timer") + 1);
+			}
+			if(stack.stackTagCompound.getInteger("timer") > 395){
+				ItemStack ret = ACItems.itemStackFlaskTar.copy();
+				ret.stackSize = stack.stackSize;
+				entity.setEntityItemStack(ret);
+				
+				if(Structure.BlockType.LOG.isBlockOfType(world.getBlock((int) (entity.posX +1), (int) entity.posY+1, (int) entity.posZ))){
+					world.setBlock((int) entity.posX + 1, (int) entity.posY+1, (int) entity.posZ, Blocks.air);
+					if(!world.isRemote) world.spawnEntityInWorld(new EntityItem(world, entity.posX, entity.posY+0.05, entity.posZ, new ItemStack(Items.coal, 1, 1)));
+				}
+				if(Structure.BlockType.LOG.isBlockOfType(world.getBlock((int) (entity.posX -1), (int) entity.posY+1, (int) entity.posZ))){
+					world.setBlock((int) entity.posX - 1, (int) entity.posY+1, (int) entity.posZ, Blocks.air);
+					if(!world.isRemote) world.spawnEntityInWorld(new EntityItem(world, entity.posX, entity.posY+0.05, entity.posZ, new ItemStack(Items.coal, 1, 1)));
+				}
+				if(Structure.BlockType.LOG.isBlockOfType(world.getBlock((int) (entity.posX), (int) entity.posY+1, (int) entity.posZ+1))){
+					world.setBlock((int) entity.posX, (int) entity.posY+1, (int) entity.posZ+1, Blocks.air);
+					if(!world.isRemote) world.spawnEntityInWorld(new EntityItem(world, entity.posX, entity.posY+0.05, entity.posZ, new ItemStack(Items.coal, 1, 1)));
+				}
+				if(Structure.BlockType.LOG.isBlockOfType(world.getBlock((int) (entity.posX), (int) entity.posY+1, (int) entity.posZ-1))){
+					world.setBlock((int) entity.posX, (int) entity.posY+1, (int) entity.posZ-1, Blocks.air);
+					if(!world.isRemote) world.spawnEntityInWorld(new EntityItem(world, entity.posX, entity.posY+0.05, entity.posZ, new ItemStack(Items.coal, 1, 1)));
+				}
+			}
 		}
 		return false;
 	}

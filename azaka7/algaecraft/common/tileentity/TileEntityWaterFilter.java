@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.blocks.BlockPos;
 import azaka7.algaecraft.common.handlers.ACPathingHandler;
 import azaka7.algaecraft.common.handlers.ACPathingHandler.Pos;
@@ -28,37 +29,26 @@ public class TileEntityWaterFilter extends TileEntity {
 	
 	private boolean worldloadInit = true;
 	
+	@Override
 	public void updateEntity()
     {
-		int tickShift = (this.xCoord+this.yCoord+this.zCoord) % 40;
-		if (this.worldObj.getWorldTime() % 40L == (long)(tickShift))
+		long updateRate = ACGameData.filterUpdateRate;
+		long tickShift = Math.abs((this.xCoord+this.yCoord+this.zCoord) % updateRate);
+		
+		if (this.worldObj.getWorldTime() % updateRate == tickShift)
         {
 			this.blockmap.clear();
 			this.filter(this.worldObj, new BlockPos(this.xCoord,this.yCoord,this.zCoord));
-			//this.pathmap.clear();
-			//ACPathingHandler.Pos pos = new ACPathingHandler.Pos(this.xCoord,this.yCoord,this.zCoord);
-			//this.pathmap.addAll(ACPathingHandler.INSTANCE.getRangedConduitMap(this.worldObj, pos, Material.water, 5));
-        }
-		if(worldloadInit){
+		}else if(worldloadInit){
 			this.blockmap.clear();
 			this.filter(this.worldObj, new BlockPos(this.xCoord,this.yCoord,this.zCoord));
-			//this.pathmap.clear();
-			//ACPathingHandler.Pos pos = new ACPathingHandler.Pos(this.xCoord,this.yCoord,this.zCoord);
-			//this.pathmap.addAll(ACPathingHandler.INSTANCE.getRangedConduitMap(this.worldObj, pos, Material.water, 5));
 			worldloadInit = false;
 		}
     }
 	
 	public boolean isPosInPathmap(int x, int y, int z){
-		//return ACPathingHandler.findAStarPath(this.worldObj, new Pos(this.xCoord,this.yCoord,this.zCoord), new Pos(x,y,z), Material.water, 5);
-		/*for(int i = 0; i < this.pathmap.size(); i++){
-			if(this.pathmap.get(i).isSame(new Pos(x,y,z))){
-				return true;
-			}
-		}*/
-		for(int i = 0; i < this.blockmap.size(); i++){
-			BlockPos pos = this.blockmap.get(i);
-			if(pos.getX() == x && pos.getY() == y && pos.getZ() == z){
+		for(BlockPos pos : this.blockmap){
+			if(pos.getX() == x && pos.getZ() == z && pos.getY() == y){
 				return true;
 			}
 		}
@@ -108,7 +98,7 @@ public class TileEntityWaterFilter extends TileEntity {
                 }
             }
 
-            if (i > 2048)
+            if (i > 1024)
             {
                 break;
             }

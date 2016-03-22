@@ -151,15 +151,15 @@ public class ACItems {
 		.setUnlocalizedName(name("itemFlippers"));
 	//private static final PotionEffect greekFire = constructMultiEffect(new PotionEffect(Potion.poison.id, 60, 4), new PotionEffect(Potion.blindness.id, 60), new PotionEffect(Potion.nightVision.id, 60), new PotionEffect(Potion.moveSpeed.id, 60, 2));
 	public static Item itemFlask = new ItemFlask((Item) null,
-			new       String[]{"Empty","Water",                                           "Salt",                                    "NaOH",                                     "CaOH", "H2CO3"},
-			new PotionEffect[]{null,    new PotionEffect(Potion.fireResistance.id, 50, 1), new PotionEffect(Potion.hunger.id, 300, 2), new PotionEffect(Potion.wither.id, 40, 2), null,   null  })
+			new       String[]{"Empty","Water",                                           "Salt",                                    "NaOH",                                     "CaOH", "H2CO3", "Tar"},
+			new PotionEffect[]{null,    new PotionEffect(Potion.fireResistance.id, 50, 1), new PotionEffect(Potion.hunger.id, 300, 2), new PotionEffect(Potion.wither.id, 40, 2), null,   null  , new PotionEffect(Potion.confusion.id, 600, 1)})
 		.setCreativeTab(AlgaeCraft.modTab)
 		.setUnlocalizedName(name("itemFlask"));
 	public static Item itemFlaskFake = new ItemFlask(itemFlask,
-			new       String[]{"Empty","Water",                                           "Salt",                                    "NaOH",                                     "CaOH", "H2CO3"},
-			new PotionEffect[]{null,    new PotionEffect(Potion.fireResistance.id, 50, 1), new PotionEffect(Potion.hunger.id, 300, 2), new PotionEffect(Potion.wither.id, 40, 2), null,   null  })
+			new       String[]{"Empty","Water",                                           "Salt",                                    "NaOH",                                     "CaOH", "H2CO3", "Tar"},
+			new PotionEffect[]{null,    new PotionEffect(Potion.fireResistance.id, 50, 1), new PotionEffect(Potion.hunger.id, 300, 2), new PotionEffect(Potion.wither.id, 40, 2), null,   null  , new PotionEffect(Potion.confusion.id, 600, 1)})
 		.setUnlocalizedName(name("itemFlaskFake"));
-	public static Item itemRedironElectrolyzer= new ItemDamageableCrafting(200, false, true)
+	public static Item itemRedironElectrolyzer= new ItemDamageableCrafting(200, false, true, new ItemStack(Items.redstone))
 		.setCreativeTab(AlgaeCraft.modTab)
 		.setTextureName(AlgaeCraft.MODID+":redstoneElectrolyzer")
 		.setUnlocalizedName(name("itemRedironElectrolyzer"));
@@ -199,7 +199,17 @@ public class ACItems {
 		.setCreativeTab(AlgaeCraft.modTab)
 		.setTextureName(AlgaeCraft.MODID+":trident_emerald")
 		.setUnlocalizedName(name("itemTridentEmerald"));
-
+	
+	public static Item greekFireFlask = (new ItemFlaskGreekFire())
+		.setCreativeTab(AlgaeCraft.modTab)
+		.setTextureName(AlgaeCraft.MODID+":flaskGreekFire")
+		.setUnlocalizedName(name("flaskGreekFire"));
+	
+	public static Item greekFireBomb = (new ItemGreekFireBomb())
+		.setCreativeTab(AlgaeCraft.modTab)
+		.setTextureName(AlgaeCraft.MODID+":greek_grenade")
+		.setUnlocalizedName(name("greekFireBomb"));
+	
 	/*/ Make the files of these items force-update themselves to new items.
 	public static Item itemLobsterBoiled;
 	public static Item itemChipRediron;
@@ -216,9 +226,8 @@ public class ACItems {
 	public static ItemStack itemRubberRaw = itemGeneric.addGenericItem(3, "rubberRaw", "rubberRaw");
 	public static ItemStack itemRubberBall = itemGeneric.addGenericItem(4, "rubberBall", "rubberBall");
 	public static ItemStack itemNeopreneTextile = itemGeneric.addGenericItem(5, "neopreneTextile", "neopreneTextile");
-	//public static ItemStack itemObdurateChunk = itemGeneric.addGenericItem(6, "obdurateChunk", "obdurate_chunk");
-	//public static ItemStack itemObdurateSteelIngot = itemGeneric.addGenericItem(7, "ingotObdurateSteel", "ingot_obdurateSteel");
 	public static ItemStack itemValuableDust = itemGeneric.addGenericItem(6, "valuableDust", "valuableDust");
+	public static ItemStack itemTarBall = itemGeneric.addGenericItem(7, "tarBall", "tarBall");
 	
 	public static ItemStack itemStackFlaskEmpty = new ItemStack(itemFlask, 1, 0);
 	public static ItemStack itemStackFlaskWater = new ItemStack(itemFlask, 1, 1);
@@ -226,6 +235,7 @@ public class ACItems {
 	public static ItemStack itemStackFlaskNaOH = new ItemStack(itemFlask, 1, 3);
 	public static ItemStack itemStackFlaskCaOH = new ItemStack(itemFlask, 1, 4);
 	public static ItemStack itemStackFlaskH2CO3 = new ItemStack(itemFlask, 1, 5);
+	public static ItemStack itemStackFlaskTar = new ItemStack(itemFlask, 1, 6);
 	
 	public static void registerItems(){
 		//FMLInterModComms.
@@ -276,6 +286,8 @@ public class ACItems {
 		registerItemStack(new ItemStack(itemFlask, 1, 3), "flaskNaOH", "flaskSodiumHydroxide", "flaskNaOH", "itemFlaskSodiumHydroxide", "itemFlaskNaOH", "itemSodiumHydroxideFlask", "itemNaOHFlask");
 		registerItem(itemFlaskFake, "CRAFTING-FLASK-DO-NOT-OBTAIN", modId);
 		
+		registerItem(greekFireFlask, "flaskGreekFire", modId);
+		
 		registerItem(itemRedironElectrolyzer, "electrolyzer", modId, "itemElectrolyzer", "toolElectrolyzer");
 		registerItem(itemQuicklime, "quicklime", modId, "itemQuicklime", "itemCaO", "dustQuicklime", "dustCaO");
 		
@@ -287,6 +299,8 @@ public class ACItems {
 		registerItem(tridentGold, "tridentGold", modId, "toolTridentGold", "tridentGold");
 		registerItem(tridentDiamond, "tridentDiamond", modId, "toolTridentDiamond", "tridentDiamond");
 		registerItem(tridentEmerald, "tridentEmerald", modId, "toolTridentEmerald", "tridentEmerald");
+		
+		registerItem(greekFireBomb, "greekFireBomb", modId, "grenadeGreekFire");
 		
 		registerItemStack(ACItems.itemChipRediron,"redironChip", "chipRediron","chipRedironBasic");
 		registerItemStack(ACItems.itemLobsterBoiled,"lobsterBoiled", "materialLobsterCooked", "materialCookedLobster");

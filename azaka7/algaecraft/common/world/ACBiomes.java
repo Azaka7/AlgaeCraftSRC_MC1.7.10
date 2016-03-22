@@ -31,7 +31,7 @@ public class ACBiomes {
 	private static int getOpenID(String biome, int def){
 		BiomeGenBase[] array = BiomeGenBase.getBiomeGenArray();
 		ACConfiguration.startSection("Biomes");
-		ACConfiguration.addComment("Base Biome IDs determine 'mutated' biomes. Base ID +128 = mutated ID");
+		
 		int configID = ACConfiguration.getInt(biome, def);
 		
 		if(array[configID] == null){

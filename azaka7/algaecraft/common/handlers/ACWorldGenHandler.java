@@ -28,7 +28,7 @@ import net.minecraftforge.event.terraingen.WorldTypeEvent;
 public class ACWorldGenHandler implements IWorldGenerator {
 	
 	private static final ACWorldGenHandler INSTANCE = new ACWorldGenHandler();
-	private static final WorldGenMinable sedimentGen = new WorldGenMinable(ACBlocks.blockSediment, 32, Blocks.gravel);
+	private static final WorldGenMinable sedimentGen = new WorldGenMinable(ACBlocks.sediment, 32, Blocks.gravel);
 	
 	
 	public static void register(){
@@ -110,8 +110,8 @@ public class ACWorldGenHandler implements IWorldGenerator {
 			if(BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x1, z1), BiomeDictionary.Type.SANDY)
 					&& BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x1, z1), BiomeDictionary.Type.HOT)
 					&& BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x1, z1), BiomeDictionary.Type.DRY)){
-				if(world.isAirBlock(x1, y1, z1) && ACBlocks.blockGuayule.canBlockStay(world, x1, y1, z1)){
-					world.setBlock(x1, y1, z1, ACBlocks.blockGuayule);
+				if(world.isAirBlock(x1, y1, z1) && ACBlocks.guayule.canBlockStay(world, x1, y1, z1)){
+					world.setBlock(x1, y1, z1, ACBlocks.guayule);
 				}
 			}
 		}
@@ -124,7 +124,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 			if(ACBiomes.isBiomeIDInList(world.getBiomeGenForCoords(x, z), ACGameData.biomeIDSwampList)){
 				int y = 63 + random.nextInt(3);
 				if(world.getBlock(x, y, z) == Blocks.air && (world.getBlock(x, y-1, z) == Blocks.water)){
-					world.setBlock(x, y, z, ACBlocks.blockAlgae);
+					world.setBlock(x, y, z, ACBlocks.algae);
 				}
 			}
 		}
@@ -138,19 +138,19 @@ public class ACWorldGenHandler implements IWorldGenerator {
             int j1 = j + rand.nextInt(6) - rand.nextInt(5);
             int k1 = k + rand.nextInt(8) - rand.nextInt(8);
 
-            if (world.getBlock(i1, j1, k1) == Blocks.water && ACBlocks.blockSeaweed.canBlockStay(world, i1, j1, k1))
+            if (world.getBlock(i1, j1, k1) == Blocks.water && ACBlocks.seaweed.canBlockStay(world, i1, j1, k1))
             {
-                world.setBlock(i1, j1, k1, ACBlocks.blockSeaweed, 0, 2);
+                world.setBlock(i1, j1, k1, ACBlocks.seaweed, 0, 2);
             }
             j1 += 1;
-            if (world.getBlock(i1, j1, k1) == Blocks.water && ACBlocks.blockSeaweed.canBlockStay(world, i1, j1, k1))
+            if (world.getBlock(i1, j1, k1) == Blocks.water && ACBlocks.seaweed.canBlockStay(world, i1, j1, k1))
             {
-                world.setBlock(i1, j1, k1, ACBlocks.blockSeaweed, 0, 2);
+                world.setBlock(i1, j1, k1, ACBlocks.seaweed, 0, 2);
             }
             j1 += 1;
-            if (world.getBlock(i1, j1, k1) == Blocks.water && ACBlocks.blockSeaweed.canBlockStay(world, i1, j1, k1))
+            if (world.getBlock(i1, j1, k1) == Blocks.water && ACBlocks.seaweed.canBlockStay(world, i1, j1, k1))
             {
-                world.setBlock(i1, j1, k1, ACBlocks.blockSeaweed, 0, 2);
+                world.setBlock(i1, j1, k1, ACBlocks.seaweed, 0, 2);
             }
         }
 
@@ -165,7 +165,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 			if(BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), BiomeDictionary.Type.OCEAN)){
 				int y = 44;//Math.round((((biome.rootHeight + 2)/4)*128)-8);
 				y += random.nextInt(10);//random.nextInt(20);
-				if(world.getBlock(x, y, z) == Blocks.water && world.getBlock(x, y-1, z).getMaterial().isSolid() && world.getBlock(x, y-1, z) != ACBlocks.blockLimestone){
+				if(world.getBlock(x, y, z) == Blocks.water && world.getBlock(x, y-1, z).getMaterial().isSolid() && world.getBlock(x, y-1, z) != ACBlocks.limestone){
 					int dx = random.nextInt(3)+3;
 					int dz = random.nextInt(3)+3;
 					int dy = 0;
@@ -177,16 +177,16 @@ public class ACWorldGenHandler implements IWorldGenerator {
 							int thisX = x+rx;
 							int thisZ = z + rz;
 							for(ry = ry+0; ry <= 0; ry++){
-								Block block = (random.nextInt(5) < 4 ? ACBlocks.blockLimestone : Blocks.water);
+								Block block = (random.nextInt(5) < 4 ? ACBlocks.limestone : Blocks.water);
 								if(ry > -2 && block == Blocks.water && world.getBlock(thisX, y+ry-1, thisZ).getMaterial().isSolid()){
 									int flag = random.nextInt(3);
 									if(flag == 0){
-										world.setBlock(thisX, y+ry, thisZ, ACBlocks.blockCoral, 8+random.nextInt(8), 2);
+										world.setBlock(thisX, y+ry, thisZ, ACBlocks.coral, 8+random.nextInt(8), 2);
 										if(random.nextInt(64)==42){
-											world.setBlock(thisX, y+ry, thisZ, ACBlocks.blockAerosPlantae, 0, 2);
+											world.setBlock(thisX, y+ry, thisZ, ACBlocks.aerosPlantae, 0, 2);
 										}
 									}else if(flag == 1){
-										world.setBlock(thisX, y+ry, thisZ, random.nextBoolean() ? ACBlocks.blockSpongeSpore : ACBlocks.blockSpongeRedSpore, random.nextInt(3), 2);
+										world.setBlock(thisX, y+ry, thisZ, random.nextBoolean() ? ACBlocks.spongeSpore : ACBlocks.spongeRedSpore, random.nextInt(3), 2);
 									}
 									else{
 										world.setBlock(thisX, y+ry, thisZ, Blocks.water);
@@ -194,15 +194,15 @@ public class ACWorldGenHandler implements IWorldGenerator {
 								}
 								else{
 									world.setBlock(thisX, y+ry, thisZ, block);
-									if(ry+1 > 0 && block == ACBlocks.blockLimestone){
+									if(ry+1 > 0 && block == ACBlocks.limestone){
 										int flag = random.nextInt(6);
 										if(flag < 3){
-											world.setBlock(thisX, y+ry+1, thisZ, ACBlocks.blockCoral, 8+random.nextInt(8), 2);
+											world.setBlock(thisX, y+ry+1, thisZ, ACBlocks.coral, 8+random.nextInt(8), 2);
 											if(random.nextInt(64)==42){
-												world.setBlock(thisX, y+ry, thisZ, ACBlocks.blockAerosPlantae, 0, 2);
+												world.setBlock(thisX, y+ry, thisZ, ACBlocks.aerosPlantae, 0, 2);
 											}
 										}else if(flag == 3){
-											world.setBlock(thisX, y+ry+1, thisZ, random.nextBoolean() ? ACBlocks.blockSpongeSpore : ACBlocks.blockSpongeRedSpore, random.nextInt(3), 2);
+											world.setBlock(thisX, y+ry+1, thisZ, random.nextBoolean() ? ACBlocks.spongeSpore : ACBlocks.spongeRedSpore, random.nextInt(3), 2);
 										}
 										else{
 											world.setBlock(thisX, y+ry+1, thisZ, Blocks.water);

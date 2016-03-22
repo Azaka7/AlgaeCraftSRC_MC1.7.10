@@ -63,8 +63,8 @@ public class ItemBlockItemMetadata extends ItemBlock {
 		/*if(super.getUnlocalizedName() == ACBlocks.blockSpongeYellow.getUnlocalizedName()){
 			return ACBlocks.blockSpongeYellow.getIcon(0, par1);
 		}*/
-		if(this.field_150939_a == ACBlocks.blockSpongeYellow){
-			return ACBlocks.blockSpongeYellow.getIcon(0, par1);
+		if(this.field_150939_a == ACBlocks.spongeYellow){
+			return ACBlocks.spongeYellow.getIcon(0, par1);
 		}
 		return iconList[par1%iconList.length];
 	}
@@ -73,8 +73,8 @@ public class ItemBlockItemMetadata extends ItemBlock {
 	public int getMetadata(int par1)
     {
 		Block block = this.field_150939_a;
-        return block == ACBlocks.blockCoral ? (par1%8)+8 : 
-        	(block == ACBlocks.blockAerosPlantae ? 9 :par1);
+        return block == ACBlocks.coral ? (par1%8)+8 : 
+        	(block == ACBlocks.aerosPlantae ? 9 :par1);
     }
 	
 	@Override
