@@ -33,18 +33,29 @@ public class ACEntities {
 		EntityRegistry.registerModEntity(EntityGreekFireBomb.class, gfb_tag, EntityRegistry.findGlobalUniqueEntityId(), AlgaeCraft.MODID, 64, 10, true);
 		EntityRegistry.registerModEntity(EntityGreekFire.class, gf_tag, EntityRegistry.findGlobalUniqueEntityId(), AlgaeCraft.MODID, 64, 10, true);
 		
-		EntityRegistry.addSpawn(EntityLobster.class, 20, 4, 10, EnumCreatureType.waterCreature, ACGameData.getOceanBiomes());
-		List<BiomeGenBase> fishBiomes = new ArrayList<BiomeGenBase>();
+		EntityRegistry.addSpawn(EntityLobster.class, ACGameData.spawnLobsterWeight, 4, 10, EnumCreatureType.waterCreature, ACGameData.getOceanBiomes());
+		/*List<BiomeGenBase> fishBiomes = new ArrayList<BiomeGenBase>();
 		for(BiomeGenBase gen : ACGameData.getOceanBiomes())
 			fishBiomes.add(gen);
-		for(int gen : ACGameData.biomeIDSwampList)
-			fishBiomes.add(BiomeGenBase.getBiome(gen));
+		for(int gen : ACGameData.biomeIDSwampList){
+			if(BiomeGenBase.getBiome(gen) != null){
+				fishBiomes.add(BiomeGenBase.getBiome(gen));
+			}
+		}
 		fishBiomes.add(BiomeGenBase.river); fishBiomes.add(BiomeGenBase.beach); fishBiomes.add(BiomeGenBase.frozenRiver); fishBiomes.add(BiomeGenBase.coldBeach); fishBiomes.add(BiomeGenBase.mushroomIslandShore); fishBiomes.add(ACBiomes.greatLake);
 		BiomeGenBase[] fishBiomeArray = new BiomeGenBase[fishBiomes.size()];
 		for(int i = 0; i < fishBiomes.size(); i++){
 			fishBiomeArray[i] = fishBiomes.get(i);
+		}*/
+		ArrayList<BiomeGenBase> fishableBiomes = new ArrayList<BiomeGenBase>();
+		for(BiomeGenBase bgb : BiomeGenBase.getBiomeGenArray()){
+			if(bgb != null && bgb.getSpawnableList(EnumCreatureType.waterCreature) != null){
+				if(!bgb.getSpawnableList(EnumCreatureType.waterCreature).isEmpty()){
+					fishableBiomes.add(bgb);
+				}
+			}
 		}
-		EntityRegistry.addSpawn(EntityFish.class, 55, 12, 20, EnumCreatureType.waterCreature, fishBiomeArray);
+		EntityRegistry.addSpawn(EntityFish.class, ACGameData.spawnFishWeight, 12, 20, EnumCreatureType.waterCreature, fishableBiomes.toArray(new BiomeGenBase[0]));
 		
 		Field f = ReflectionHelper.findField(EnumCreatureType.class, "maxNumberOfCreature", "field_75606_e");
 		f.setAccessible(true);

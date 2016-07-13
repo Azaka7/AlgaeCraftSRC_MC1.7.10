@@ -1,5 +1,7 @@
 package azaka7.algaecraft.common.items;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -7,6 +9,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import azaka7.algaecraft.AlgaeCraft;
+import azaka7.algaecraft.common.handlers.ACSwimmingHandler.ISwimGear;
+import azaka7.algaecraft.common.handlers.ACSwimmingHandler.MoveKey;
+import azaka7.algaecraft.common.handlers.ACSwimmingHandler.SwimFactor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
@@ -25,7 +30,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class ItemWetsuit extends ItemArmor {
+public class ItemWetsuit extends ItemArmor implements ISwimGear{
+
+	public static final SwimFactor H_FACTOR_F = new SwimFactor("AlgaeCraft:wetsuit_horizontal_f", 1.1, 0.11, MoveKey.FOREWARD);
+	public static final SwimFactor H_FACTOR_B = new SwimFactor("AlgaeCraft:wetsuit_horizontal_b", 1.1, 0.11, MoveKey.BACKWARD);
+	public static final SwimFactor H_FACTOR_L = new SwimFactor("AlgaeCraft:wetsuit_horizontal_l", 1.1, 0.11, MoveKey.LEFT);
+	public static final SwimFactor H_FACTOR_R = new SwimFactor("AlgaeCraft:wetsuit_horizontal_r", 1.1, 0.11, MoveKey.RIGHT);
+	public static final SwimFactor V_FACTOR_U = new SwimFactor("AlgaeCraft:wetsuit_vertical_u", 1.1, 0.11, MoveKey.JUMP);
+	public static final SwimFactor V_FACTOR_D = new SwimFactor("AlgaeCraft:wetsuit_vertical_d", 1.1, 0.11, MoveKey.SNEAK);
 	
 	private static final String[] colors = new String[]{"black","red","green","brown","blue","purple","cyan","lightgray","gray","pink","lime","yellow","lightblue","magenta","orange","white"};
 	private static IIcon[] icons = new IIcon[16];
@@ -38,7 +50,7 @@ public class ItemWetsuit extends ItemArmor {
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
     {
-		int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, itemStack);
+		/*int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, itemStack);
 		if(i == 0){
 			i = EnchantmentHelper.getEnchantmentLevel(Enchantment.projectileProtection.effectId, itemStack);
 			if(i == 0){
@@ -51,7 +63,7 @@ public class ItemWetsuit extends ItemArmor {
 		if(player.isInWater()){
 			player.motionX *= (Math.pow(1.003,(i+2)/2));
 			player.motionZ *= (Math.pow(1.003,(i+2)/2));
-		}
+		}*/
     }
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -170,5 +182,24 @@ public class ItemWetsuit extends ItemArmor {
 			return super.getIsRepairable(par1ItemStack, par2ItemStack);
 		}
 	}
+	@Override
+	public ArrayList<SwimFactor> getValidFactorsForItem(EntityPlayer player,
+			ItemStack stack, int slot) {
+		ArrayList<SwimFactor> ret = new ArrayList<SwimFactor>();
+		if(slot == player.inventory.getSizeInventory() + 1){
+			ItemStack boots = player.inventory.armorItemInSlot(0);
+			if(!(boots == null || boots.getItem() == null || boots.getItem() instanceof ItemWetsuit)){
+				ret.add(H_FACTOR_B);
+				ret.add(H_FACTOR_F);
+				ret.add(H_FACTOR_L);
+				ret.add(H_FACTOR_R);
+				ret.add(V_FACTOR_D);
+				ret.add(V_FACTOR_U);
+			}
+		}
+		return ret;
+	}
+	@Override
+	public void onPlayerSwimTick(EntityPlayer player, ItemStack stack, int slot) {}
 
 }

@@ -11,6 +11,7 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
@@ -35,25 +36,62 @@ public class EntityLobster extends EntityWaterMob
 	private float randomMotionVecX = 0.0F;
     private float randomMotionVecY = 0.0F;
     private float randomMotionVecZ = 0.0F;
-    
-    public static final ResourceLocation mainTexture = new ResourceLocation(AlgaeCraft.MODID+":textures/entities/LobsterSkin.png");
-    /**
-     * A cooldown before this entity will search for another Silverfish to join them in battle.
-     */
-    private int allySummonCooldown;
 
+    public static final ResourceLocation mainTexture = new ResourceLocation(AlgaeCraft.MODID+":textures/entities/LobsterSkin.png");
+    public static final ResourceLocation blueTexture = new ResourceLocation(AlgaeCraft.MODID+":textures/entities/LobsterSkinBlue.png");
+    
+    private boolean blue;
+    
+    public EntityLobster(){
+    	this(null);
+    }
+    
     public EntityLobster(World par1World)
     {
         super(par1World);
         this.setSize(0.3F, 0.7F);
         this.stepHeight = 1.05F;
+        blue = this.rand.nextInt(5000) == 0;
+
+		this.dataWatcher.updateObject(13, Byte.valueOf(blue ? (byte) 1 : (byte) 0));
     }
     
-    protected void applyEntityAttributes()
+    public EntityLobster(World world, boolean b) {
+		this(world);
+		this.blue = b;
+		this.dataWatcher.updateObject(13, Byte.valueOf(blue ? (byte) 1 : (byte) 0));
+	}
+    
+    @Override
+    protected void entityInit()
+    {
+        super.entityInit();
+        this.dataWatcher.addObject(13, new Byte((byte)0));
+    }
+    
+    public boolean isBlue(){
+    	return this.dataWatcher.getWatchableObjectByte(13) % 2 == 1;
+    }
+
+	protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(5.0D);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.56999D);
+    }
+    
+    @Override
+    public void writeEntityToNBT(NBTTagCompound tags)
+    {
+    	super.writeEntityToNBT(tags);
+    	tags.setBoolean("BlueLobster", blue);
+    }
+    
+    @Override
+    public void readEntityFromNBT(NBTTagCompound tags)
+    {
+    	super.readEntityFromNBT(tags);
+    	blue = tags.getBoolean("BlueLobster");
     }
     
     protected void dropFewItems(boolean par1, int par2)
@@ -222,15 +260,17 @@ public class EntityLobster extends EntityWaterMob
     {
         super.onLivingUpdate();
         int i = this.rand.nextInt(3)-1;
-        int x = (int)Math.round(this.posX)+i;
+        int x = ((Double)this.posX).intValue()+i;
         i = this.rand.nextInt(3)-1;
-        int y = (int)Math.round(this.posY)+i;
+        int y = ((Double)this.posY).intValue()+i;
         i = this.rand.nextInt(3)-1;
-        int z = (int)Math.round(this.posZ)+i;
+        int z = ((Double)this.posZ).intValue()+i;
         TileEntity tile = worldObj.getTileEntity(x, y, z);
-        if(tile instanceof TileEntityCage){
+        if(tile instanceof TileEntityCage && (!this.worldObj.isRemote)){
         	if(tile.blockMetadata == 0){
+        		System.out.println(this.blue);
         		((TileEntityCage) tile).setCreature(this);
+        		((TileEntityCage) tile).blockMetadata = (this.blue ? 2 : 1);
         		this.setDead();
         	}
         }

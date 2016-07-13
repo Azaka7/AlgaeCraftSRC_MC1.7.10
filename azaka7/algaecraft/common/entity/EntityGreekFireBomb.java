@@ -128,7 +128,7 @@ public class EntityGreekFireBomb extends EntityThrowable{
             				//if(ACBlocks.greekFire.canBlockStay(worldObj, x.intValue(), y.intValue(), z.intValue())){
                     		//	this.worldObj.setBlock(x.intValue(), y.intValue(), z.intValue(), ACBlocks.greekFire, 3, 3);
             				//} else {
-            					this.worldObj.spawnEntityInWorld(BlockGreekFire.createFallingBlock(worldObj, x.intValue(), y.intValue(), z.intValue(), 3));
+            					this.worldObj.spawnEntityInWorld(BlockGreekFire.createFallingBlock(worldObj, x.intValue(), y.intValue(), z.intValue(), 1));
             				//}
             			}
             		}

@@ -17,12 +17,22 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import azaka7.algaecraft.AlgaeCraft;
+import azaka7.algaecraft.common.handlers.ACSwimmingHandler.ISwimGear;
+import azaka7.algaecraft.common.handlers.ACSwimmingHandler.MoveKey;
+import azaka7.algaecraft.common.handlers.ACSwimmingHandler.SwimFactor;
 import cpw.mods.fml.client.config.GuiConfigEntries.ChatColorEntry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBCD extends ItemArmor {
+public class ItemBCD extends ItemArmor implements ISwimGear{
+
+	public static final SwimFactor H_FACTOR_F = new SwimFactor("AlgaeCraft:bcd_horizontal_f", 1.2, 0.1, MoveKey.FOREWARD);
+	public static final SwimFactor H_FACTOR_B = new SwimFactor("AlgaeCraft:bcd_horizontal_b", 1.2, 0.1, MoveKey.BACKWARD);
+	public static final SwimFactor H_FACTOR_L = new SwimFactor("AlgaeCraft:bcd_horizontal_l", 1.2, 0.1, MoveKey.LEFT);
+	public static final SwimFactor H_FACTOR_R = new SwimFactor("AlgaeCraft:bcd_horizontal_r", 1.2, 0.1, MoveKey.RIGHT);
+	public static final SwimFactor V_FACTOR_U = new SwimFactor("AlgaeCraft:bcd_vertical_u", 1.2, 0.105, MoveKey.JUMP);
+	public static final SwimFactor V_FACTOR_D = new SwimFactor("AlgaeCraft:bcd_vertical_d", 1.2, 0.105, MoveKey.SNEAK);
 	
 	private String armorImg;
 	
@@ -123,7 +133,7 @@ public class ItemBCD extends ItemArmor {
 	public void changeDo(ItemStack par1ItemStack, EntityPlayer player, boolean increase, Side side)
 	{
 		ItemStack tank = createTankStack(par1ItemStack);
-		if(tank == null){return;}
+		if(tank == null || tank.getItem() == null){return;}
 		confirmTagCompound(par1ItemStack);
 		
 		int reqAir = 0;
@@ -132,21 +142,24 @@ public class ItemBCD extends ItemArmor {
 			else{reqAir = 1;}
 			
 			if(tank.getItemDamage() + reqAir > tank.getMaxDamage()){
-				player.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY+"Not enough air to change state"));
-				return;}
+				if(side == Side.CLIENT){
+					player.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY+"Not enough air to change state"));
+				}
+				return;
+			}
 			
 			tank.setItemDamage(tank.getItemDamage()+reqAir);
 			setTankReturnOld(par1ItemStack, tank);
 			setState(par1ItemStack, getState(par1ItemStack)+1);
 			if(side == Side.CLIENT){
-			String s = "";
-			switch(getState(par1ItemStack)){
-			case 0: s = "Negative"; break;
-			case 1: s = "Neutral"; break;
-			case 2: s = "Positive"; break;
-			default: s = ""; break;
-			}
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY+"BCD State: "+s+" Buoyancy"));
+				String s = "";
+				switch(getState(par1ItemStack)){
+					case 0: s = "Negative"; break;
+					case 1: s = "Neutral"; break;
+					case 2: s = "Positive"; break;
+					default: s = ""; break;
+				}
+				player.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY+"BCD State: "+s+" Buoyancy"));
 			}
 		}
 		else{
@@ -161,14 +174,14 @@ public class ItemBCD extends ItemArmor {
 			setTankReturnOld(par1ItemStack, tank);
 			setState(par1ItemStack, getState(par1ItemStack)-1);
 			if(side == Side.CLIENT){
-			String s = "";
-			switch(getState(par1ItemStack)){
-			case 0: s = "Negative"; break;
-			case 1: s = "Neutral"; break;
-			case 2: s = "Positive"; break;
-			default: s = ""; break;
-			}
-			player.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY+"BCD State: "+s+" Buoyancy"));
+				String s = "";
+				switch(getState(par1ItemStack)){
+					case 0: s = "Negative"; break;
+					case 1: s = "Neutral"; break;
+					case 2: s = "Positive"; break;
+					default: s = ""; break;
+				}
+				player.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY+"BCD State: "+s+" Buoyancy"));
 			}
 		}
 	}
@@ -283,13 +296,14 @@ public class ItemBCD extends ItemArmor {
 		}
 		par3List.add("BCD State: "+s);
 		ItemStack atank = this.createTankStack(par1ItemStack);
-		if(atank != null && atank.getItem() != null && atank.getItem() == ACItems.itemAirTankCreative){
+		boolean notNull = atank != null && atank.getItem() != null;
+		if(notNull && atank.getItem() == ACItems.itemAirTankCreative){
 			par3List.add("Air Tank: \u221E");
 			return;
 		}
 		//if(atank == null){System.out.println("could not construct tank stack");}
-		int max = atank != null ? atank.getMaxDamage() : 0;
-		int amount = atank != null ? atank.getItemDamage() : 0;
+		int max = notNull ? atank.getMaxDamage() : 0;
+		int amount = notNull ? atank.getItemDamage() : 0;
 		amount = max - amount;
 		s="No Air Tank!";
 		if(amount - max > max && max>0){s = "Too Much Air! ("+(amount-max)+"/"+max+")";}
@@ -305,5 +319,21 @@ public class ItemBCD extends ItemArmor {
     {
         return AlgaeCraft.MODID+":textures/armor/"+armorImg+".png";
     }
+	
+	@Override
+	public ArrayList<SwimFactor> getValidFactorsForItem(EntityPlayer player,
+			ItemStack stack, int slot) {
+		ArrayList<SwimFactor> ret = new ArrayList<SwimFactor>();
+			ret.add(H_FACTOR_B);
+			ret.add(H_FACTOR_F);
+			ret.add(H_FACTOR_L);
+			ret.add(H_FACTOR_R);
+			ret.add(V_FACTOR_D);
+			ret.add(V_FACTOR_U);
+		return ret;
+	}
+	
+	@Override
+	public void onPlayerSwimTick(EntityPlayer player, ItemStack stack, int slot) {}
 
 }

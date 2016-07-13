@@ -17,7 +17,7 @@ public class TileEntityCage extends TileEntity {
 	
 	public void setCreature(EntityCreature entity){
 		if(entity instanceof EntityLobster){
-			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 2);
+			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, ((EntityLobster) entity).isBlue() ? 2 : 1, 3);
 		}
 		this.markDirty();
 	}

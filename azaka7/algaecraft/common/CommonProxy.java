@@ -1,5 +1,7 @@
 package azaka7.algaecraft.common;
 
+import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.registry.GameRegistry;
 import azaka7.algaecraft.AlgaeCraft;
 import azaka7.algaecraft.common.handlers.ACEventHandler;
@@ -25,5 +27,12 @@ public class CommonProxy {
 	}
 	
 	public void registerRenders(){}
+
+	/**
+	 * Returns a side-appropriate EntityPlayer for use during message handling
+	 */
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+	 return ctx.getServerHandler().playerEntity;
+	}
 
 }

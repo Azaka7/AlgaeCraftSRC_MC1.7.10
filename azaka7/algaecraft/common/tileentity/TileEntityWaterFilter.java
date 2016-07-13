@@ -44,7 +44,24 @@ public class TileEntityWaterFilter extends TileEntity {
 			this.filter(this.worldObj, new BlockPos(this.xCoord,this.yCoord,this.zCoord));
 			worldloadInit = false;
 		}
-    }
+		
+		if(ACGameData.sporousMossGen && this.getBlockMetadata() == 3 && this.worldObj.getWorldTime() % 100 == 0){
+			int x = this.worldObj.rand.nextInt(5)-2, y = this.worldObj.rand.nextInt(5)-2, z = this.worldObj.rand.nextInt(5)-2;
+			if(this.isPosNearPathmap(this.xCoord+x, this.yCoord+y, this.zCoord+z)){
+				if(worldObj.getBlock(this.xCoord+x, this.yCoord+y, this.zCoord+z) == Blocks.cobblestone){
+					worldObj.setBlock(this.xCoord+x, this.yCoord+y, this.zCoord+z, Blocks.mossy_cobblestone);
+				} else if(worldObj.getBlock(this.xCoord+x, this.yCoord+y, this.zCoord+z) == Blocks.stonebrick && worldObj.getBlockMetadata(x, y, z) == 0){
+					worldObj.setBlock(this.xCoord+x, this.yCoord+y, this.zCoord+z, Blocks.stonebrick, 1, 3);
+				}
+			}
+		}
+	}
+	
+	public boolean isPosNearPathmap(int x, int y, int z){
+		return isPosInPathmap(x,y,z)
+				|| isPosInPathmap(x+1,y,z) || isPosInPathmap(x,y+1,z) || isPosInPathmap(x,y,z+1)
+				|| isPosInPathmap(x-1,y,z) || isPosInPathmap(x,y-1,z) || isPosInPathmap(x,y,z-1);
+	}
 	
 	public boolean isPosInPathmap(int x, int y, int z){
 		for(BlockPos pos : this.blockmap){

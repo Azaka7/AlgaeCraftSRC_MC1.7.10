@@ -1,7 +1,9 @@
 package azaka7.algaecraft.common.entity;
 
 import azaka7.algaecraft.common.blocks.ACBlocks;
+import azaka7.algaecraft.common.blocks.BlockGreekFire;
 import azaka7.algaecraft.common.items.ACItems;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.monster.EntityBlaze;
@@ -13,6 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class EntityGreekFire extends EntityThrowable{
 	
@@ -41,6 +44,17 @@ public class EntityGreekFire extends EntityThrowable{
         this.motionX *= scaleFactor;
         this.motionY *= scaleFactor;
         this.motionZ *= scaleFactor;
+    }
+    
+    @Override
+    public void onUpdate()
+    {
+    	int x = ((Double) this.posX).intValue();
+    	int y = ((Double) this.posY).intValue();
+    	int z = ((Double) this.posZ).intValue();
+    	if(((BlockGreekFire) ACBlocks.greekFire).canNeighborBurn(worldObj, x, y, z)){
+    		worldObj.setBlock(x, y, z, ACBlocks.greekFire, 14, 3);
+    	}
     }
 
     /**

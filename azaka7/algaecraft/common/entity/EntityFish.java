@@ -139,6 +139,7 @@ public class EntityFish extends EntityWaterMob
 		this.dataWatcher.updateObject(13, Byte.valueOf((byte)i));
     }
     
+    @Override
     protected void entityInit()
     {
         super.entityInit();
@@ -326,6 +327,10 @@ public class EntityFish extends EntityWaterMob
             f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
             this.renderYawOffset += (-((float)Math.atan2(this.motionX, this.motionZ)) * 180.0F / (float)Math.PI - this.renderYawOffset) * 0.1F;
             this.rotationYaw = this.renderYawOffset;
+            
+            if(worldObj.isAirBlock(((Double)posX).intValue(), ((Double)posY).intValue() + 1, ((Double)posZ).intValue())){
+            	this.motionY -= 0.1;
+            }
         }
         else
         {

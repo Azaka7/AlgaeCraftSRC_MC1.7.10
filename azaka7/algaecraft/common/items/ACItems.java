@@ -25,6 +25,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import azaka7.algaecraft.AlgaeCraft;
+import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.handlers.ACInterModHandler;
 import azaka7.algaecraft.common.items.ItemAirTank.TankType;
 
@@ -228,6 +229,7 @@ public class ACItems {
 	public static ItemStack itemNeopreneTextile = itemGeneric.addGenericItem(5, "neopreneTextile", "neopreneTextile");
 	public static ItemStack itemValuableDust = itemGeneric.addGenericItem(6, "valuableDust", "valuableDust");
 	public static ItemStack itemTarBall = itemGeneric.addGenericItem(7, "tarBall", "tarBall");
+	public static ItemStack itemTanDye = itemGeneric.addGenericItem(8, "tan_dye", "tan_dye");
 	
 	public static ItemStack itemStackFlaskEmpty = new ItemStack(itemFlask, 1, 0);
 	public static ItemStack itemStackFlaskWater = new ItemStack(itemFlask, 1, 1);
@@ -265,42 +267,45 @@ public class ACItems {
 		registerItem(itemAerosBulb, "aerosBulb", modId, "ingredientAerosBulb", "itemAerosBulb");
 		itemAerosBulb.setPotionEffect(PotionHelper.field_151423_m);
 		
-		if(AlgaeCraft.thaumcraft()){
-			itemScubaMask = ACInterModHandler.getItem_Thaum(itemScubaMask);
-			itemScubaBCD = ACInterModHandler.getItem_Thaum(itemScubaBCD);
-			itemWetsuit = ACInterModHandler.getItem_Thaum(itemWetsuit);
-			itemFlippers = ACInterModHandler.getItem_Thaum(itemFlippers);
+		if(ACGameData.enableSCUBA){
+			if(AlgaeCraft.thaumcraft()){
+				itemScubaMask = ACInterModHandler.getItem_Thaum(itemScubaMask);
+				itemScubaBCD = ACInterModHandler.getItem_Thaum(itemScubaBCD);
+				itemWetsuit = ACInterModHandler.getItem_Thaum(itemWetsuit);
+				itemFlippers = ACInterModHandler.getItem_Thaum(itemFlippers);
+			}
+			registerItem(itemScubaMask, "diveMask", modId, "diveMask", "helmetDiveMask", "itemDiveMask");
+			registerItem(itemScubaBCD, "bcd", modId, "diveBCD", "armorBCD", "bcd");
+			registerItem(itemWetsuit, "wetsuit", modId, "armorWetsuit", "diveWetsuit", "itemWetsuit");
+			registerItem(itemFlippers, "flippers", modId, "diveFlippers", "flippers", "armorFlippers", "itemFlippers");
+			registerItem(itemAirTankSmall,"airTankSmall",modId,"itemAirTankSmall");
+			registerItem(itemAirTankLarge,"airTankLarge",modId,"itemAirTankLarge");
+			registerItem(itemAirTankCreative,"airTankCreative",modId);
 		}
-		registerItem(itemScubaMask, "diveMask", modId, "diveMask", "helmetDiveMask", "itemDiveMask");
-		registerItem(itemScubaBCD, "bcd", modId, "diveBCD", "armorBCD", "bcd");
-		registerItem(itemWetsuit, "wetsuit", modId, "armorWetsuit", "diveWetsuit", "itemWetsuit");
-		registerItem(itemFlippers, "flippers", modId, "diveFlippers", "flippers", "armorFlippers", "itemFlippers");
-		registerItem(itemAirTankSmall,"airTankSmall",modId,"itemAirTankSmall");
-		registerItem(itemAirTankLarge,"airTankLarge",modId,"itemAirTankLarge");
-		registerItem(itemAirTankCreative,"airTankCreative",modId);
-		
-		registerItem(itemFlask, "flask", modId);
-		registerItemStack(new ItemStack(itemFlask, 1, 0), "flaskEmpty", "flaskEmpty", "itemFlaskEmpty", "itemEmptyFlask");
-		registerItemStack(new ItemStack(itemFlask, 1, 1), "flaskWater", "flaskWater", "itemFlaskWater", "itemWaterFlask");
-		registerItemStack(new ItemStack(itemFlask, 1, 2), "flaskSaltWater", "flaskSaltWater", "flaskWaterSalt", "itemFlaskSaltWater", "itemSaltWaterFlask");
-		registerItemStack(new ItemStack(itemFlask, 1, 3), "flaskNaOH", "flaskSodiumHydroxide", "flaskNaOH", "itemFlaskSodiumHydroxide", "itemFlaskNaOH", "itemSodiumHydroxideFlask", "itemNaOHFlask");
-		registerItem(itemFlaskFake, "CRAFTING-FLASK-DO-NOT-OBTAIN", modId);
-		
-		registerItem(greekFireFlask, "flaskGreekFire", modId);
-		
-		registerItem(itemRedironElectrolyzer, "electrolyzer", modId, "itemElectrolyzer", "toolElectrolyzer");
+		if(ACGameData.enableFlasks){
+			registerItem(itemFlask, "flask", modId);
+			registerItemStack(new ItemStack(itemFlask, 1, 0), "flaskEmpty", "flaskEmpty", "itemFlaskEmpty", "itemEmptyFlask");
+			registerItemStack(new ItemStack(itemFlask, 1, 1), "flaskWater", "flaskWater", "itemFlaskWater", "itemWaterFlask");
+			registerItemStack(new ItemStack(itemFlask, 1, 2), "flaskSaltWater", "flaskSaltWater", "flaskWaterSalt", "itemFlaskSaltWater", "itemSaltWaterFlask");
+			registerItemStack(new ItemStack(itemFlask, 1, 3), "flaskNaOH", "flaskSodiumHydroxide", "flaskNaOH", "itemFlaskSodiumHydroxide", "itemFlaskNaOH", "itemSodiumHydroxideFlask", "itemNaOHFlask");
+			registerItem(itemFlaskFake, "CRAFTING-FLASK-DO-NOT-OBTAIN", modId);
+			
+			registerItem(greekFireFlask, "flaskGreekFire", modId);
+			registerItem(greekFireBomb, "greekFireBomb", modId, "grenadeGreekFire");
+			registerItem(itemRedironElectrolyzer, "electrolyzer", modId, "itemElectrolyzer", "toolElectrolyzer");
+		}
 		registerItem(itemQuicklime, "quicklime", modId, "itemQuicklime", "itemCaO", "dustQuicklime", "dustCaO");
 		
 		registerItem(tridentWood, "tridentWood", modId, "toolTridentWood", "tridentWood");
 		registerItem(tridentStone, "tridentStone", modId, "toolTridentStone", "tridentStone");
-		registerItem(tridentBone, "tridentBone", modId, "toolTridentBone", "tridentBone");
 		registerItem(tridentIron, "tridentIron", modId, "toolTridentIron", "tridentIron");
-		registerItem(tridentNetherbrick, "tridentNetherbrick", modId, "toolTridentNetherbrick", "tridentNetherbrick");
 		registerItem(tridentGold, "tridentGold", modId, "toolTridentGold", "tridentGold");
 		registerItem(tridentDiamond, "tridentDiamond", modId, "toolTridentDiamond", "tridentDiamond");
-		registerItem(tridentEmerald, "tridentEmerald", modId, "toolTridentEmerald", "tridentEmerald");
-		
-		registerItem(greekFireBomb, "greekFireBomb", modId, "grenadeGreekFire");
+		if(ACGameData.enableAltTridents){
+			registerItem(tridentBone, "tridentBone", modId, "toolTridentBone", "tridentBone");
+			registerItem(tridentNetherbrick, "tridentNetherbrick", modId, "toolTridentNetherbrick", "tridentNetherbrick");
+			registerItem(tridentEmerald, "tridentEmerald", modId, "toolTridentEmerald", "tridentEmerald");
+		}
 		
 		registerItemStack(ACItems.itemChipRediron,"redironChip", "chipRediron","chipRedironBasic");
 		registerItemStack(ACItems.itemLobsterBoiled,"lobsterBoiled", "materialLobsterCooked", "materialCookedLobster");

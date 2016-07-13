@@ -2,6 +2,7 @@ package azaka7.algaecraft.common.handlers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 import azaka7.algaecraft.common.blocks.ACBlocks;
@@ -58,6 +59,15 @@ public class ACCraftingHandler implements IFuelHandler {
 		OreDictionary.registerOre("dustCopper", ACItems.itemValuableDust);
 		OreDictionary.registerOre("dustTin", ACItems.itemValuableDust);
 		OreDictionary.registerOre("dustAluminum", ACItems.itemValuableDust);
+		
+		/*
+		ItemStack copperIngot = null;
+		ArrayList<ItemStack> copper_ingots = OreDictionary.getOres("ingotCopper");
+		if(!copper_ingots.isEmpty()){
+			copperIngot = copper_ingots.get(0);
+			//add all copper-based recipes
+		}
+		*/
 		
 		//GameRegistry.registerFuelHandler(handler);
 		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.sticky_piston), new Object[]{Blocks.piston, ACBlocks.algae});
@@ -351,6 +361,18 @@ public class ACCraftingHandler implements IFuelHandler {
 		GameRegistry.addShapelessRecipe(ACItems.itemTarBall.copy(), ACItems.itemStackFlaskTar.copy(), Blocks.vine);
 		GameRegistry.addShapelessRecipe(ACItems.itemTarBall.copy(), ACItems.itemStackFlaskTar.copy(), Blocks.web);
 		GameRegistry.addShapelessRecipe(ACItems.itemTarBall.copy(), ACItems.itemStackFlaskTar.copy(), Items.wheat);
+
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ACItems.itemTanDye.getItem(), 2, ACItems.itemTanDye.getItemDamage()),"dyeOrange", "dyeLightGray"));
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemTanDye.getItem(), 2, ACItems.itemTanDye.getItemDamage()), new ItemStack(Items.dye, 1, 14), new ItemStack(Items.dye, 1, 7));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ACItems.itemTanDye.getItem(), 2, ACItems.itemTanDye.getItemDamage()),"dyeBrown", "dyeWhite"));
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemTanDye.getItem(), 2, ACItems.itemTanDye.getItemDamage()), new ItemStack(Items.dye, 1, 3), new ItemStack(Items.dye, 1, 15));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ACItems.itemTanDye.getItem(), 2, ACItems.itemTanDye.getItemDamage()),"dyeLime", "dyeRed"));
+		GameRegistry.addShapelessRecipe(new ItemStack(ACItems.itemTanDye.getItem(), 2, ACItems.itemTanDye.getItemDamage()), new ItemStack(Items.dye, 1, 10), new ItemStack(Items.dye, 1, 1));
+
+		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.sail_wool, 8), Blocks.wool, Blocks.wool, Blocks.wool, Blocks.wool, Blocks.wool, Blocks.wool, Blocks.wool, Blocks.wool, ACItems.itemTanDye);
+		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.sail_wool, 3), Blocks.wool, Blocks.wool, Blocks.wool, ACItems.itemTanDye);
+		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.sail_wool, 3), Blocks.wool, Blocks.wool, Blocks.wool, Blocks.sand);
+		GameRegistry.addShapelessRecipe(new ItemStack(ACBlocks.sail_wool, 1), Blocks.wool, ACItems.itemTanDye);
 	}
 	
 	private void registerCustomWetsuits() {

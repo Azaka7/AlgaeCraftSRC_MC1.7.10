@@ -1,10 +1,16 @@
 package azaka7.algaecraft.common.handlers;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Random;
 
 import azaka7.algaecraft.common.ACConfiguration;
 import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.blocks.ACBlocks;
+import azaka7.algaecraft.common.blocks.BlockPos;
+import azaka7.algaecraft.common.structures.ACStructures;
+import azaka7.algaecraft.common.structures.Structure;
+import azaka7.algaecraft.common.structures.StructureHandler;
 import azaka7.algaecraft.common.world.ACBiomes;
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -16,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenDeadBush;
 import net.minecraft.world.gen.feature.WorldGenMinable;
@@ -23,6 +30,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
 
 public class ACWorldGenHandler implements IWorldGenerator {
@@ -51,6 +59,9 @@ public class ACWorldGenHandler implements IWorldGenerator {
 	}
 
 	private void generateSurface(World world, Random random, int i, int j) {
+		if(ACGameData.genShips && random.nextDouble() < ACGameData.shipGenChance){
+			generateShips(world, random, i, j);
+		}
 		
 		generateAlgaeForChunk(world, random, i, j);
 		if(ACGameData.generateGuayule){
@@ -89,7 +100,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 	private void generateSedimentForChunk(World world, Random random, int i, int j) {
 		int x0 = i * 16;
 		int z0 = j * 16;
-		for(int c = 0; c < 64; c++){
+		for(int c = 0; c < ACGameData.sedimentGenRate; c++){
 			int x1 = x0 + random.nextInt(16);
 			int z1 = z0 + random.nextInt(16);
 			if(BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x1, z1), BiomeDictionary.Type.OCEAN)){
@@ -103,7 +114,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 		int x = i*16;
 		int z = j*16;
 		int y = world.getHeightValue(x, z);
-		for(int c = 0; c < 8; c++){
+		for(int c = 0; c < ACGameData.guayuleGenRate; c++){
 			int x1 = x + 8 + random.nextInt(8) - random.nextInt(8);
 			int z1 = z + 8 + random.nextInt(8) - random.nextInt(8);
 			int y1 = y + random.nextInt(4) - random.nextInt(4);
@@ -118,7 +129,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 	}
 	
 	private void generateAlgaeForChunk(World world, Random random, int i, int j){
-		for(int n = 0; n < 4; n++){
+		for(int n = 0; n < ACGameData.algaeGenRate; n++){
 			int x = (i*16) + random.nextInt(16);
 			int z = (j*16) + random.nextInt(16);
 			if(ACBiomes.isBiomeIDInList(world.getBiomeGenForCoords(x, z), ACGameData.biomeIDSwampList)){
@@ -132,7 +143,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
 	
 	public boolean generateSeaweedForPos(World world, Random rand, int i, int j, int k)
     {
-        for (int l = 0; l < 64; ++l)
+        for (int l = 0; l < ACGameData.seaweedGenRate; ++l)
         {
             int i1 = i + rand.nextInt(8) - rand.nextInt(8);
             int j1 = j + rand.nextInt(6) - rand.nextInt(5);
@@ -158,7 +169,7 @@ public class ACWorldGenHandler implements IWorldGenerator {
     }
 	
 	private void generateCoralForChunk(World world, Random random, int i, int j){
-		for(int n = 0; n < 16; n++){
+		for(int n = 0; n < ACGameData.coralGenRate; n++){
 			int x = (i*16) + random.nextInt(16);
 			int z = (j*16) + random.nextInt(16);
 			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
@@ -229,5 +240,39 @@ public class ACWorldGenHandler implements IWorldGenerator {
 				}
 			}
 		}
+	}
+	
+	private void generateShips(World world, Random random, int i, int j){
+		int x = (i*16) + random.nextInt(16);
+		int z = (j*16) + random.nextInt(16);
+
+		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+		
+		ArrayList<BiomeGenBase> oceans = new ArrayList<BiomeGenBase>();
+		for(BiomeGenBase ocean : ACGameData.getOceanBiomes()){
+			oceans.add(ocean);
+		}
+		if(oceans.contains(biome)){
+			if(random.nextInt(100) == 0){
+				int y = 63;
+				if(world.getBlock(x, y-1, z) == Blocks.water){
+					Structure[] strucs = new Structure[]{ACStructures.egyptShip, ACStructures.smallShip, ACStructures.largeShip};
+					StructureHandler.generateStructure(world, new BlockPos(x,y,z), strucs[random.nextInt(strucs.length)], random.nextInt(4));
+				}
+			} else {
+				int hv = Math.round(16*biome.heightVariation);
+				int hr = Math.round(biome.rootHeight*16);
+				int y = Math.round(64 + (hr) + ((random.nextInt(hv*2)-hv)));
+				if(world.getBlock(x, y-1, z).isOpaqueCube() && world.getBlock(x, y, z).getMaterial() == Material.water){
+					if(random.nextInt(80) == 0){
+						StructureHandler.generateStructure(world, new BlockPos(x,y,z), ACStructures.laboratoryBasic, random.nextInt(4));
+					} else {
+						Structure[] strucs = new Structure[]{ACStructures.egyptShipWreck, ACStructures.smallShipWreck, ACStructures.largeShipWreck};
+						StructureHandler.generateStructure(world, new BlockPos(x,y,z), strucs[random.nextInt(strucs.length)], random.nextInt(4));
+					}
+				}
+			}
+		}
+		
 	}
 }

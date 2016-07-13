@@ -22,6 +22,7 @@ public class BlockSeaweed extends Block {
 	protected BlockSeaweed() {
 		super(Material.water);
 		this.setStepSound(soundTypeGrass);
+        this.setTickRandomly(true);
 	}
 	
 	public boolean isBlockReplaceable(World world, int x, int y, int z)
@@ -45,7 +46,6 @@ public class BlockSeaweed extends Block {
         		break;
         	}
         }
-        
         if(!((belowIsHard||belowIsSeaweed) && aboveIsWater)){return false;}
         if(belowIsSeaweed){return true;}
 		
@@ -123,7 +123,7 @@ public class BlockSeaweed extends Block {
             	par1World.setBlock(par2, par3, par4-1, Blocks.flowing_water, 1, 3);
             }
         	if(rand.nextDouble() < ACGameData.seaweedGrowthChance){
-        		if(this.canPlaceBlockAt(par1World, par2, par3+1, par4)){
+        		if(par1World.getBlock(par2, par3+1, par4).isReplaceable(par1World, par2, par3, par4) && this.canPlaceBlockAt(par1World, par2, par3+1, par4)){
         			par1World.setBlock(par2, par3+1, par4, this, 0, 3);
         		}
         	}

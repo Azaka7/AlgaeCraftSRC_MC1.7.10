@@ -58,18 +58,19 @@ public class StructureCreator {
 		return this;
 	}
 	
+	public StructureCreator setBlock(int x, int y, int z, BlockData data){
+		return this.setBlock(new BlockPos(x,y,z), data);
+	}
+	
 	public void fill(BlockPos pos1, BlockPos pos2, BlockData data){
 		for(Object pos : BlockPos.getAllInBox(pos1, pos2)){
 			blockMap.put((BlockPos) pos, data);
 		}
-		/*for(int x = pos1.getX(); (pos2.getX()+(pos2.getX() >= pos1.getX() ? 1 : -1)) - x != 0; x += (pos2.getX() >= pos1.getX() ? 1 : -1)){
-			for(int y = pos1.getY(); (pos2.getY()+(pos2.getY() >= pos1.getY() ? 1 : -1)) - y != 0; y += (pos2.getY() >= pos1.getY() ? 1 : -1)){
-				for(int z = pos1.getZ(); (pos2.getZ()+(pos2.getZ() >= pos1.getZ() ? 1 : -1)) - z != 0; z += (pos2.getZ() >= pos1.getZ() ? 1 : -1)){
-					blockMap.put(new BlockPos(x,y,z), data);
-				}
-			}
-		}*/
 	}
+	public void fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockData data){
+		this.fill(new BlockPos(x1,y1,z1), new BlockPos(x2,y2,z2), data);
+	}
+	
 	
 	public void setChestWithChance(BlockPos pos, ChestGenHooks cgh){
 		blockMap.put(pos, new BlockData(Blocks.chest));

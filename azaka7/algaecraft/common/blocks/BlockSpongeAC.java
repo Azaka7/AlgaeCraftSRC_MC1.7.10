@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import azaka7.algaecraft.AlgaeCraft;
+import azaka7.algaecraft.common.ACGameData;
 
 import com.google.common.collect.Lists;
 
@@ -83,6 +84,10 @@ public class BlockSpongeAC extends BlockSponge{
 	@Override
     public void onNeighborBlockChange(World worldIn, int x, int y, int z, Block neighborBlock)
     {
+		if(!ACGameData.spongeNeighborUpdates){
+			return;
+		}
+		
         this.tryAbsorb(worldIn, new BlockPos(x, y, z));
         super.onNeighborBlockChange(worldIn, x, y, z, neighborBlock);
     }

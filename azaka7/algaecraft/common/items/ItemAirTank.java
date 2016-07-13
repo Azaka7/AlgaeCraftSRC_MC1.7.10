@@ -2,7 +2,10 @@ package azaka7.algaecraft.common.items;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import azaka7.algaecraft.client.model.ModelAirCompressor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,21 +26,27 @@ public class ItemAirTank extends Item {
 	}
 	
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-		if(par3EntityPlayer.inventory.armorItemInSlot(2) != null && par3EntityPlayer.inventory.armorItemInSlot(2).getItem() instanceof ItemBCD){
+		if(player.inventory.armorItemInSlot(2) != null && player.inventory.armorItemInSlot(2).getItem() instanceof ItemBCD){
 			//System.out.println("found bcd");
-			ItemStack bcd = par3EntityPlayer.inventory.armorItemInSlot(2);
-			if(!ItemBCD.setTank(bcd, par1ItemStack)){
+			ItemStack bcd = player.inventory.armorItemInSlot(2);
+			if(!ItemBCD.setTank(bcd, stack)){
 				//System.out.println("replacing tank");
-				par1ItemStack = ItemBCD.setTankReturnOld(bcd, par1ItemStack);
+				ItemStack newStack = ItemBCD.setTankReturnOld(bcd, stack);
+				stack = (newStack != null && newStack.getItem() != null) ? newStack : useStack(stack);
 			}
 			else{
-				par1ItemStack.stackSize = 0;
+				stack.stackSize = 0;
 			}
 		}
-		return par1ItemStack;
+		return stack;
     }
+	
+	private ItemStack useStack(ItemStack stack){
+		stack.stackSize--;
+		return stack;
+	}
 	
 	@Override
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)

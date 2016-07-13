@@ -47,6 +47,7 @@ public class BlockSpongeSpore extends BlockBush implements IGrowable{
         return false;
     }
 	
+	@Override
 	public void updateTick(World par1World, int par2, int par3, int par4, Random rand)
     {
 		if (!par1World.isRemote)
