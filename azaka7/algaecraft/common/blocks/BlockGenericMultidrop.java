@@ -25,13 +25,15 @@ public class BlockGenericMultidrop extends Block {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		if(world.rand.nextInt(100)<=(fortune*25)){
 			ItemStack stack = drops[world.rand.nextInt(drops.length)].copy();
-			if(stack.getItem().isItemTool(stack)){
-				stack.setItemDamage(world.rand.nextInt(stack.getItemDamage()+1));
+			if(stack != null && stack.getItem() != null){
+				if(stack.getItem().isItemTool(stack)){
+					stack.setItemDamage(world.rand.nextInt(stack.getItemDamage()+1));
+				}
+				else{
+					stack.stackSize = (world.rand.nextInt(stack.stackSize)+1);
+				}
+				ret.add(stack);
 			}
-			else{
-				stack.stackSize = (world.rand.nextInt(stack.stackSize)+1);
-			}
-			ret.add(stack);
 		}
 		ret.add(baseDrops[world.rand.nextInt(baseDrops.length)].copy());
 		return ret;

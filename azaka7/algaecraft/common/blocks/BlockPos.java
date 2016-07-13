@@ -24,7 +24,11 @@ public class BlockPos extends Vec3i
     private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
     private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
     private static final String __OBFID = "CL_00002334";
-
+    
+    public BlockPos(){
+    	super(0,0,0);
+    }
+    
     public BlockPos(int x, int y, int z)
     {
         super(x, y, z);

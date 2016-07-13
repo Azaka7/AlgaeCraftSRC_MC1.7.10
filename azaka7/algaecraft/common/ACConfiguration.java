@@ -80,4 +80,8 @@ public class ACConfiguration {
 		section = "General";
 	}
 
+	public static void save() {
+		config.save();
+	}
+
 }

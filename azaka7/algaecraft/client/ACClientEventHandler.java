@@ -1,5 +1,7 @@
 package azaka7.algaecraft.client;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -11,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
+import scala.actors.threadpool.Arrays;
 import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.handlers.ACEventHandler;
 import azaka7.algaecraft.common.items.ItemDiveMask;
@@ -45,11 +48,13 @@ public class ACClientEventHandler {
 	
 	@SubscribeEvent
 	public void handleFogColor(EntityViewRenderEvent.FogColors event){
+		boolean masked = false;
 		Entity entity = event.entity;
 		if(entity instanceof EntityPlayer){
 			ItemStack helm = ((EntityPlayer) entity).inventory.armorItemInSlot(3);
 			if(helm != null){
 				if(helm.getItem() instanceof ItemDiveMask){
+					masked = true;
 					if(entity.isInsideOfMaterial(Material.water)){
 						float g = 0;
 						float f = EnchantmentHelper.getRespiration((EntityLivingBase) entity)*0.05F;
@@ -66,7 +71,23 @@ public class ACClientEventHandler {
 				}
 			}
 		}
-		
+		if(!masked && entity.isInsideOfMaterial(Material.water)){
+			ArrayList<Integer> ints = new ArrayList<Integer>();
+			for(int id : ACGameData.biomeIDSwampList){
+				ints.add(id);
+			}
+			if(ints.contains(entity.worldObj.getBiomeGenForCoords(((Double)entity.posX).intValue(), ((Double)entity.posZ).intValue()).biomeID)){
+				if(event.green * 10F > 1.0F){
+					event.red *= 0.5F/(event.green*10F);
+					event.blue *= 0.4F/(event.green*10F);
+					event.green = 1.0F;
+				} else {
+					event.red *= 0.5F;
+					event.green *= 10F;
+					event.blue *= 0.4F;
+				}
+			}
+		}
 	}
 	
 }

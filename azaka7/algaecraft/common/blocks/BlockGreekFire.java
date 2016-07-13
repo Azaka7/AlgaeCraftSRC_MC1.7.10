@@ -101,7 +101,7 @@ public class BlockGreekFire extends BlockFire {
         }
     }
 	
-	private boolean canNeighborBurn(World world, int x, int y, int z)
+	public boolean canNeighborBurn(World world, int x, int y, int z)
     {
         return this.canCatchFire(world, x + 1, y, z, WEST ) ||
                this.canCatchFire(world, x - 1, y, z, EAST ) ||
@@ -199,7 +199,7 @@ public class BlockGreekFire extends BlockFire {
 
                                         if (j2 > 0 && rand.nextInt(l1) <= j2) //&& (!world.canLightningStrikeAt(i1, k1, j1)) && !world.canLightningStrikeAt(i1 - 1, k1, z) && !world.canLightningStrikeAt(i1 + 1, k1, j1) && !world.canLightningStrikeAt(i1, k1, j1 - 1) && !world.canLightningStrikeAt(i1, k1, j1 + 1))
                                         {
-                                        	int k2 = l + rand.nextInt(11) / 4; // 5/4
+                                        	int k2 = l + rand.nextInt(10) / 4; // 5/4
 
                                             if (k2 > 15)
                                             {
@@ -286,6 +286,9 @@ public class BlockGreekFire extends BlockFire {
     			int y = ((Double) this.posY).intValue();
     			int z = ((Double) this.posZ).intValue();
     			if(worldObj.getBlock(x,y-1,z).getMaterial() == Material.water){
+    				worldObj.setBlock(x, y, z, this.func_145805_f());
+    				this.setDead();
+    			} else if(((BlockGreekFire) ACBlocks.greekFire).canNeighborBurn(worldObj, x, y, z)){
     				worldObj.setBlock(x, y, z, this.func_145805_f());
     				this.setDead();
     			}

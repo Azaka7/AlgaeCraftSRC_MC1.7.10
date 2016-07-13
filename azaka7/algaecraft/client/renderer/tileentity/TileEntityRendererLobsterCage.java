@@ -43,13 +43,13 @@ public class TileEntityRendererLobsterCage extends TileEntitySpecialRenderer {
 		tileentity.blockMetadata = -1;
 		if(tileentity.getBlockMetadata() == 0){return;}
 		
-		if(tileentity.getBlockMetadata() == 1){
+		if(tileentity.getBlockMetadata() == 1 || tileentity.getBlockMetadata() == 2){
 			
 			if(this.model != lobsterModel){
 			this.model = lobsterModel;
 			}
 			GL11.glPushMatrix();
-			this.bindTexture(EntityLobster.mainTexture);
+			this.bindTexture(tileentity.getBlockMetadata() == 1 ? EntityLobster.mainTexture : EntityLobster.blueTexture);
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			GL11.glTranslatef((float)d0+0.5F, (float)d1+1.66666F, (float)d2+0.5F);
 			GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);

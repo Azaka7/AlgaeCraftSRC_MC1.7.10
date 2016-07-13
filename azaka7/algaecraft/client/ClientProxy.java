@@ -1,9 +1,12 @@
 package azaka7.algaecraft.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import azaka7.algaecraft.AlgaeCraft;
@@ -49,5 +52,15 @@ public class ClientProxy extends CommonProxy{
 		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.greekFireModelID, false,"greekfire"));
 		RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.brazierModelID, false,"brazier"));
 		//RenderingRegistry.registerBlockHandler(new RenderBlockSimpleHandler(ACGameData.waterBlockModelID, false,"water"));
+	}
+	
+	@Override
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+	 // Note that if you simply return 'Minecraft.getMinecraft().thePlayer',
+	 // your packets will not work because you will be getting a client
+	 // player even when you are on the server! Sounds absurd, but it's true.
+
+	 // Solution is to double-check side before returning the player:
+	 return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
 	}
 }

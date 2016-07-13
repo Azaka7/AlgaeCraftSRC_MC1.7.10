@@ -9,6 +9,7 @@ import java.util.Random;
 import com.google.common.collect.ObjectArrays;
 
 import azaka7.algaecraft.AlgaeCraft;
+import azaka7.algaecraft.common.ACGameData;
 import azaka7.algaecraft.common.items.ACItems;
 import azaka7.algaecraft.common.items.ItemBlockBrazier;
 import azaka7.algaecraft.common.items.ItemBlockItem;
@@ -118,6 +119,8 @@ public class ACBlocks {
 			ACItems.itemValuableDust.copy(),
 			ACItems.itemValuableDust.copy(),
 			ACItems.itemValuableDust.copy(),
+			ACItems.itemValuableDust.copy(),
+			ACItems.itemValuableDust.copy(),
 			new ItemStack(Items.gold_ingot, 1),
 			new ItemStack(Items.gold_ingot, 2),
 			new ItemStack(Items.gold_nugget, 4),
@@ -127,6 +130,7 @@ public class ACBlocks {
 			new ItemStack(Items.gold_nugget, 3),
 			new ItemStack(Items.gold_nugget, 3),
 			new ItemStack(Items.gold_nugget, 3),
+			new ItemStack(Items.gold_nugget, 2),
 			new ItemStack(Items.gold_nugget, 2),
 			new ItemStack(Items.gold_nugget, 2),
 			new ItemStack(Items.gold_nugget, 2),
@@ -170,6 +174,9 @@ public class ACBlocks {
 			new ItemStack(Items.rotten_flesh, 4),
 			new ItemStack(Items.rotten_flesh, 2),
 			new ItemStack(Items.rotten_flesh, 1),
+			new ItemStack(ACItems.tridentIron, 1, ACItems.tridentIron.getMaxDamage() - 1),
+			new ItemStack(ACItems.tridentWood, 1, ACItems.tridentWood.getMaxDamage() - 1),
+			new ItemStack(ACItems.tridentGold, 1, ACItems.tridentGold.getMaxDamage() - 1),
 			new ItemStack(Items.wooden_sword, 1, Items.wooden_sword.getMaxDamage()-1),
 			new ItemStack(Items.iron_sword, 1, Items.iron_sword.getMaxDamage()-1),
 			new ItemStack(Items.stone_shovel, 1, Items.stone_shovel.getMaxDamage()-1),
@@ -183,17 +190,18 @@ public class ACBlocks {
 			new ItemStack(Items.golden_horse_armor),
 			new ItemStack(Items.quartz,3),
 			new ItemStack(Items.string, 4),
-			new ItemStack(Items.string, 4),
-			new ItemStack(Items.string, 4),
+			new ItemStack(Items.string, 3),
+			new ItemStack(Items.string, 2),
 			new ItemStack(Items.string, 4),
 			new ItemStack(Items.slime_ball),
 			new ItemStack(Items.slime_ball),
 			new ItemStack(Items.slime_ball),
-			new ItemStack(Items.gunpowder, 4),
-			new ItemStack(Items.gunpowder, 4),
-			new ItemStack(ACItems.itemKnifeIron, ACItems.itemKnifeIron.getMaxDamage()),
-			new ItemStack(ACItems.itemKnifeIron, ACItems.itemKnifeIron.getMaxDamage()),
-			new ItemStack(ACItems.itemKnifeGold, ACItems.itemKnifeGold.getMaxDamage())
+			new ItemStack(Items.gunpowder, 1),
+			new ItemStack(Items.gunpowder, 3),
+			new ItemStack(Items.gunpowder, 5),
+			new ItemStack(ACItems.itemKnifeIron,1, ACItems.itemKnifeIron.getMaxDamage()-1),
+			new ItemStack(ACItems.itemKnifeIron,1, ACItems.itemKnifeIron.getMaxDamage()-1),
+			new ItemStack(ACItems.itemKnifeGold,1, ACItems.itemKnifeGold.getMaxDamage()-1)
 		).setBlockName(name("sediment"))
 		.setBlockTextureName(AlgaeCraft.MODID+":sediment")
 		.setCreativeTab(AlgaeCraft.modTab)
@@ -273,6 +281,11 @@ public class ACBlocks {
 			.setBlockName(name("greek_brazier_inWater"))
 			.setBlockTextureName(AlgaeCraft.MODID+":absentComponent");
 	
+	public static Block sail_wool = new BlockGeneric(Material.cloth)
+		.setHardness(0.8F).setStepSound(Block.soundTypeCloth).setBlockName("cloth")
+		.setBlockTextureName(AlgaeCraft.MODID+":wool_colored_tan").setCreativeTab(AlgaeCraft.modTab)
+		.setBlockName(name("wool_tan"));
+	
 	public static void registerBlocks(){
 		spongeSpore = new BlockSpongeSpore(Blocks.sponge, ACItems.itemSponge)
 		.setCreativeTab(AlgaeCraft.modTab)
@@ -333,26 +346,29 @@ public class ACBlocks {
 		
 		registerBlock(guayule, "guayule",ItemBlockItem.class, Boolean.FALSE, canPlaceInAir, new String("guayuleSmall"));
 		
-		registerBlock(airCompressor, "airCompressor",ItemBlockItem.class, Boolean.FALSE, canPlaceInAir, new String("airCompressorIcon"));
-		
-		registerBlock(greekFire, "greekFire", ItemBlockNoDrops.class);
-		BlockGreekFire.registerFlamables();
-		BlockDispenser.dispenseBehaviorRegistry.putObject(ACItems.greekFireFlask, dispenserBehavior_GreekFire);
-		BlockDispenser.dispenseBehaviorRegistry.putObject(ACItems.greekFireBomb, new BehaviorProjectileDispense(){
-			@Override
-			protected IProjectile getProjectileEntity(World world, IPosition pos){
-				return new EntityGreekFireBomb(world, pos.getX(), pos.getY(), pos.getZ());
-			}
-		});
+		if(ACGameData.enableSCUBA){
+			registerBlock(airCompressor, "airCompressor",ItemBlockItem.class, Boolean.FALSE, canPlaceInAir, new String("airCompressorIcon"));
+		}
+		if(ACGameData.enableFlasks){
+			registerBlock(greekFire, "greekFire", ItemBlockNoDrops.class);
+			BlockGreekFire.registerFlamables();
+			BlockDispenser.dispenseBehaviorRegistry.putObject(ACItems.greekFireFlask, dispenserBehavior_GreekFire);
+			BlockDispenser.dispenseBehaviorRegistry.putObject(ACItems.greekFireBomb, new BehaviorProjectileDispense(){
+				@Override
+				protected IProjectile getProjectileEntity(World world, IPosition pos){
+					return new EntityGreekFireBomb(world, pos.getX(), pos.getY(), pos.getZ());
+				}
+			});
+		}
 		
 		registerBlock(brazier, "brazier", ItemBlockBrazier.class);
 		registerBlock(brazier_wet, "brazier_inWater", ItemBlockBrazier.class);
+		registerBlock(sail_wool, "wool_tan");
 	}
 	
 	//used to register blocks that are required by items
 	public static void registerPreItemBlocks(){
 		ItemBlock itemSpongeBlock = new ItemBlockItemMetadata(spongeYellow, Boolean.FALSE,  new String[]{"spongeBlockYellowDry","spongeBlockYellowWet"});
-		OreDictionary.registerOre("blockSponge", itemSpongeBlock);
 		//System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
 		//System.out.println(Item.getItemById(19).getUnlocalizedName());
 		//System.out.println(Block.getIdFromBlock(blockSpongeYellow));
@@ -400,6 +416,8 @@ public class ACBlocks {
 				e2.printStackTrace();
 			}
 		}
+		
+		OreDictionary.registerOre("blockSponge", itemSpongeBlock);
 		//Block.blockRegistry.addObject(19, "sponge", blockSpongeYellow);
 		//Item.itemRegistry.addObject(Block.getIdFromBlock(Blocks.sponge), "sponge", itemSpongeBlock);
 		

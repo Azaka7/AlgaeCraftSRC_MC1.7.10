@@ -47,9 +47,9 @@ public class BlockLobsterCage extends BlockContainer {
             if (itemstack == null || (itemstack !=null && itemstack.getItem() == null))
             {
                 int i1 = par1World.getBlockMetadata(par2, par3, par4);
-                    if (i1 == 1)
+                    if (i1 == 1 || i1 == 2)
                     {
-                    	ItemStack itemstack1 = new ItemStack(ACItems.itemLobster, 1, 0);
+                    	ItemStack itemstack1 = new ItemStack(ACItems.itemLobster, 1, i1 - 1);
 
                     	if (!par5EntityPlayer.inventory.addItemStackToInventory(itemstack1))
                     	{

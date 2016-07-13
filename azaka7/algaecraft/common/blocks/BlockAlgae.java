@@ -59,7 +59,7 @@ public class BlockAlgae extends BlockBush {
 		
 		boolean biome = false;
 		BiomeGenBase thisBiome = world.getBiomeGenForCoords(x, z);
-		if(ACGameData.biomeIDSwampList.length > 1){
+		if(ACGameData.biomeIDSwampList.length > 0){
 			for(int n = 0; n<ACGameData.biomeIDSwampList.length; n++){
 				if(ACGameData.biomeIDSwampList[n]==thisBiome.biomeID|| BiomeGenBase.swampland.biomeID==thisBiome.biomeID){
 					biome=true;

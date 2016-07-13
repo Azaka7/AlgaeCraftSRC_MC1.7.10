@@ -72,6 +72,6 @@ public class RenderLobster extends RenderLiving
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return EntityLobster.mainTexture;
+		return ((EntityLobster) entity).isBlue() ? EntityLobster.blueTexture : EntityLobster.mainTexture;
 	}
 }
